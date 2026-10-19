@@ -202,7 +202,7 @@ import "../styles/course.css";
             <span class="route-status">01 · 前置基础 · 待制作</span>
             <h2>离散数学：计数与证明</h2>
             <p>
-              计数方法、归纳法、不变量。学习怎样组织一个适用于所有情况的论证。
+              计数方法、归纳法、不变量。学习怎样组织覆盖题目假设范围内所有情况的论证。
             </p>
           </li>
           <li>
@@ -227,9 +227,9 @@ import "../styles/course.css";
           </li>
         </ol>
         <p class="route-caveat">
-          这是建议学习顺序，不是所有主题之间的严格先修链。熟悉前两项所需知识，就可以直接进入当前专题。
+          按下面列出的先修知识选择起点；熟悉基本代数、等比求和与渐近记号，就可以进入当前专题。
           <strong>数值分析</strong>
-          中的近似、误差与稳定性属于另一个后续方向，不放在这条先修链上。
+          研究近似、误差与稳定性，作为独立的后续方向。
         </p>
         <div class="topic-position">
           <h2>当前专题放在哪里？</h2>
@@ -250,15 +250,16 @@ import "../styles/course.css";
             </p>
           </div>
           <p class="caption">
-            聚合分析、记账法和势能法是三种并列的分析方法，课程按理解顺序展开；第四课是应用。这里的“势能”是人为定义的状态函数，不是物理能量。
+            聚合分析、记账法和势能法是三种并列的分析方法，课程按理解顺序展开；第四课是应用。势能是用来记录剩余分析预算的状态函数。
           </p>
         </div>
-        <h2 class="topic-title">摊还分析：计算一串操作的总成本</h2>
+        <h2 class="topic-title">摊还分析：计算连续追加的总操作次数</h2>
         <div class="overview-purpose">
           <h3>要解决的问题</h3>
           <p>
-            动态数组大多数时候添加元素很快，偶尔扩容却要复制整个数组。只看最慢的一次，会高估一长串操作的总成本。
-            <strong>摊还分析</strong>研究整段操作如何分担这些偶尔出现的大开销。
+            动态数组有空位时，追加只需写入一次；容量用尽时，追加需要复制全部旧元素再写入新元素。
+            <strong>摊还分析</strong>
+            把整段操作的总成本分配到每一步，给出每次操作的摊还上界。
           </p>
           <p>
             学完后，你应能证明从空数组开始、翻倍扩容的 m 次追加总成本为
@@ -267,7 +268,7 @@ import "../styles/course.css";
         </div>
         <div class="learning-path" aria-label="本专题的四步推导路线">
           <a href="#aggregate">
-            <b>先算总账</b>
+            <b>先求总和</b>
             <span>数清写入与复制</span>
           </a>
           <a href="#banker">
@@ -288,16 +289,16 @@ import "../styles/course.css";
           <ul>
             <li>基本代数与有限求和，尤其是等比数列求和。</li>
             <li>理解 O(m) 是增长上界，Θ(m) 表示同阶增长。</li>
-            <li>能跟随一个不变量或逐步推导；不要求预先学过摊还分析。</li>
+            <li>能跟随一个不变量或逐步推导。</li>
           </ul>
           <p>
-            递推式属于学习路线中的相关工具，本专题不要求先解复杂递推；概率论也不是本专题的前置要求。
+            本专题会从动态数组的追加过程介绍摊还分析；递推式与概率论留在后续主题中学习。
           </p>
         </div>
         <div class="course-meta">
           <span>需要：求和、基本代数、O 记号</span>
-          <span>不需要概率论</span>
-          <span>四个实验共用同一个动态数组模型</span>
+          <span>保证覆盖任意追加序列</span>
+          <span>前三课分析追加；第四课加入删除与缩容</span>
         </div>
         <a class="overview-start" href="#aggregate">
           进入第一课：先看动态数组怎样工作
@@ -306,7 +307,7 @@ import "../styles/course.css";
       <section id="aggregate" class="lesson" hidden>
         <div class="lesson-head">
           <p>第一课 / 聚合分析</p>
-          <h2>聚合分析：求出连续 m 次追加的总成本</h2>
+          <h2>聚合分析：计算连续追加的总操作次数</h2>
         </div>
         <div class="lesson-context">
           <p>
@@ -356,16 +357,18 @@ import "../styles/course.css";
           </div>
         </div>
         <div class="cost-definition">
-          <strong>这里的“成本”不是钱，也不是秒数。</strong>
-          我们数基本操作：写入或复制一个元素各记 1
-          次。这样分析的是算法做了多少工作，不受机器快慢影响。
+          <h3>操作次数：每写入或复制一个元素，计 1 次</h3>
+          <p>
+            本文以写入、复制的次数衡量计算成本。m
+            表示追加次数；从空数组只做追加时，元素数 n = m。cᵢ 表示第 i
+            次追加执行的基本操作次数，T(m) 表示前 m 次追加执行的基本操作总次数。
+          </p>
         </div>
         <div class="model-note">
-          <strong>统一成本模型</strong>
+          <strong>模型范围与初始状态</strong>
           <span>
-            写入一个新元素计 1，复制一个旧元素计
-            1；不计申请内存、释放内存和其他固定开销。初始 n = C = 0；首次容量为
-            1，写满后容量翻倍。本课仅追加。
+            本模型仅计入写入与复制，内存申请、释放和其他固定开销省略。初始 n = C
+            = 0；首次容量为 1，写满后容量翻倍。本课仅追加。
           </span>
         </div>
         <div class="lab append-lab">
@@ -391,11 +394,11 @@ import "../styles/course.css";
               <strong id="append-capacity">0</strong>
             </div>
             <div>
-              <span>本次实际成本 cᵢ</span>
+              <span>本次基本操作次数 cᵢ</span>
               <strong id="append-cost">0</strong>
             </div>
             <div>
-              <span>累计实际成本 T(m)</span>
+              <span>累计基本操作次数 T(m)</span>
               <strong id="append-total">0</strong>
             </div>
           </div>
@@ -414,18 +417,19 @@ import "../styles/course.css";
             <button id="append-play">连续追加</button>
             <button id="append-jump">运行到第 17 次</button>
             <button id="append-reset" class="quiet">
-              重置
+              重置追加序列
             </button>
           </div>
+          <p class="caption">重置追加序列会同步清空记账课、势能课的数据。</p>
           <div class="chart-title">
-            <h4>每次操作的真实成本</h4>
-            <span>纵轴：单位操作；横轴：追加序号</span>
+            <h4>每次追加的基本操作次数</h4>
+            <span>纵轴：基本操作次数；横轴：追加序号</span>
           </div>
           <div
             id="cost-chart"
             class="chart"
             role="img"
-            aria-label="追加操作成本柱状图"
+            aria-label="每次追加的基本操作次数柱状图"
           ></div>
           <div class="chart-legend">
             <span>
@@ -442,28 +446,27 @@ import "../styles/course.css";
         </div>
         <div class="explanation-grid">
           <div>
-            <h3>单次最坏，和序列最坏，是两件事。</h3>
+            <h3>单次最坏 Θ(n)，连续 m 次追加总成本 O(m)</h3>
             <p>
-              装满 n 个元素时，下一次追加花 n + 1，单次最坏是
-              Θ(n)。但昂贵的扩容不会连续发生。
+              装满 n 个元素时，下一次追加需要 n + 1 次基本操作，单次最坏成本为
+              Θ(n)。扩容后增加的空位能容纳后续追加。
             </p>
             <p>
-              <strong>摊还 O(1)</strong>说的是：从空数组开始，任意长度 m
-              的追加序列，总成本是
-              O(m)。它不承诺每次操作都快，也不需要随机输入或概率分布。
+              <strong>摊还 O(1)</strong>表示：从空数组开始，任意长度 m
+              的追加序列，总成本都有 O(m)
+              上界。这个保证覆盖所有追加序列，其中触发扩容的单次操作仍可能需要
+              Θ(n) 次基本操作。
             </p>
           </div>
           <div class="derivation">
             <p>复制发生在容量 1、2、4、8……用尽时。</p>
             <div id="aggregate-sum" class="formula">
-              复制成本 = 0
+              复制次数 = 0
             </div>
             <div id="aggregate-bound" class="formula">
               T(0) = 0
             </div>
-            <p id="aggregate-explain">
-              先运行几步，把抽象求和变成眼前的搬运记录。
-            </p>
+            <p id="aggregate-explain">运行追加操作，查看各次扩容的复制次数。</p>
             <details>
               <summary>展开严格的几何级数上界</summary>
               <p>
@@ -483,7 +486,7 @@ import "../styles/course.css";
         </div>
         <div class="quiz" data-quiz="aggregate">
           <p class="question-label">推算一次边界</p>
-          <h3>从空数组追加 17 个元素。累计实际成本是多少？</h3>
+          <h3>从空数组追加 17 个元素。累计执行了多少次基本操作？</h3>
           <div class="quiz-options"></div>
           <p class="quiz-feedback" role="status"></p>
           <button class="quiz-reset quiet">打乱选项，重试</button>
@@ -492,7 +495,7 @@ import "../styles/course.css";
           我能区分：单次最坏与摊还上界
         </button>
         <a class="lesson-next" href="#banker">
-          下一课：把已经算出的总账，分配到每一步
+          下一课：把已经算出的总成本，分配到每一步
         </a>
       </section>
       <section id="banker" class="lesson" hidden>
@@ -500,23 +503,28 @@ import "../styles/course.css";
           <p>第二课 / 记账法</p>
           <h2>记账法：建立每个前缀的余额不变量</h2>
         </div>
+        <p class="section-intro">
+          前缀是从第 1 次开始的前 m
+          次追加。这里要保持的不变量是：完成任意前缀后，余额 B(m) ≥ 0。
+        </p>
         <p class="lesson-bridge">
-          第一课已把总成本压到 3m
-          以内。这一课换一个视角：如果每次只收固定预算，能不能付清所有真实开销？
+          第一课已证明 T(m) ≤
+          3m。这一课把这个上界分配到每次追加，验证固定收费能否覆盖全部基本操作。
         </p>
         <p class="section-intro">
           沿用第一课的操作序列。每次追加收 3
-          个信用点，实际用了多少就付多少。信用点只是证明工具，不是运行时间。
+          个信用点，按本次实际操作次数扣除。信用点用于记录分析预算。
         </p>
         <div class="lab">
           <div class="lab-top">
             <div>
               <h3>一份可以逐行核对的账本</h3>
               <p>
-                拖动查看前缀；先做一个预测：第 17 次扩容后，余额会不会变负？
+                拖动查看前缀；先做一个预测：第 17
+                次追加触发扩容后，余额会不会变负？
               </p>
             </div>
-            <button id="banker-prepare">生成 17 次追加</button>
+            <button id="banker-prepare">补齐至少 17 次追加</button>
           </div>
           <label class="slider-label" for="banker-range">
             查看前 m 次：<output id="banker-m">0</output>
@@ -551,21 +559,22 @@ import "../styles/course.css";
         </div>
         <div class="explanation-grid">
           <div>
-            <h3>“收 3”为什么不只是拍脑袋？</h3>
+            <h3>每次收取 3 个信用点，如何覆盖总成本？</h3>
             <p>
-              每次先花 1
-              写入。剩下的预算可以为将来的搬迁准备信用。扩容把成本一次花出去；之后很多不扩容的追加，把余额补回来。
+              每次收取 3 个信用点，用其中 1
+              点支付新元素写入。扩容时，再按复制的元素数从余额中扣除信用；普通追加把剩余
+              2 点存入余额。
             </p>
             <p>
-              关键不是平均收了多少，而是<strong>每一个前缀都不欠账</strong>
-              。B(m) = 3m − T(m) ≥ 0，才能推出 T(m) ≤ 3m。
+              证明需要保证<strong>每一个前缀的余额都非负</strong>。由 B(m) = 3m
+              − T(m) ≥ 0，即可推出 T(m) ≤ 3m。
             </p>
           </div>
           <div class="derivation">
             <h3>证明义务</h3>
             <p>
-              不能因为这 17
-              行账本没变负，就宣布所有长度都成立。第一课的总量界已经能保证余额非负；下一课会给出只依赖当前状态的局部证明。
+              这 17
+              行展示了具体前缀的余额。对任意长度的非负保证来自第一课的总量界；下一课将用当前状态的局部关系证明同一个上界。
             </p>
             <p class="formula">B(m) = 3m − Σ cᵢ</p>
             <p>
@@ -593,19 +602,24 @@ import "../styles/course.css";
           <h2>势能法：从状态变化推导总成本上界</h2>
         </div>
         <p class="lesson-bridge">
-          第二课维护了一本余额不为负的账。现在不用保存全部历史，只根据元素数和容量计算“存下的预算”，并证明每步的预算变化都有界。
+          第二课用余额非负保证总成本上界。现在用元素数和容量定义势能，并证明每步的实际成本加上势能变化，始终不超过
+          3。
         </p>
         <p class="section-intro">
-          对这里从空数组出发、只追加且翻倍扩容的可达状态，选择 Φ(n,C) = 2n −
-          C。初始 Φ = 0；之后 n &gt; C/2，所以 Φ ≥ 0。
+          对从空数组出发、按上述追加规则实际能出现的 (n,C) 状态，选择 Φ(n,C) =
+          2n − C。初始 Φ = 0；之后 n &gt; C/2，所以 Φ ≥ 0。
+        </p>
+        <p class="section-intro">
+          记 cᵢ 为第 i 步的实际成本，Φᵢ 为第 i 步完成后的势能。定义摊还成本 ĉᵢ =
+          cᵢ + ΔΦᵢ，其中 ΔΦᵢ = Φᵢ − Φᵢ₋₁。下文的 Σ 均对 i = 1,…,m 求和。
         </p>
         <div class="lab">
           <div class="lab-top">
             <div>
               <h3>实际成本 + 势能变化</h3>
-              <p>选择一步，看看昂贵的复制怎样被势能下降抵消。</p>
+              <p>选择一次扩容，核对复制次数与势能减少量。</p>
             </div>
-            <button id="potential-prepare">生成 17 次追加</button>
+            <button id="potential-prepare">补齐至少 17 次追加</button>
           </div>
           <label class="slider-label" for="potential-range">
             查看第 i 次操作：<output id="potential-i">—</output>
@@ -680,13 +694,13 @@ import "../styles/course.css";
             </div>
             <p class="formula">Σ cᵢ = Σ ĉᵢ − Φₘ + Φ₀ ≤ Σ ĉᵢ ≤ 3m</p>
             <p>
-              最后的不等式用到了 Φ₀ = 0 和 Φₘ ≥
-              0。势能不是随便挑一个公式：需要验证每步的摊还成本，也需要控制初末势能。
+              第一个 ≤ 由 Φ₀ = 0、Φₘ ≥ 0 得到；第二个 ≤ 由每步 ĉᵢ ≤ 3
+              得到。使用势能法需要同时验证这些条件。
             </p>
           </div>
         </div>
         <div class="quiz" data-quiz="potential">
-          <p class="question-label">检查一个看似更漂亮的证明</p>
+          <p class="question-label">练习：末态势能为负时，哪一步不等式失效？</p>
           <h3>
             把 Φ 改成 −n²，每步 ĉᵢ 都不大于 0。能因此直接推出 T(m) ≤ Σĉᵢ，甚至
             T(m) ≤ 0 吗？
@@ -705,13 +719,13 @@ import "../styles/course.css";
       <section id="hysteresis" class="lesson" hidden>
         <div class="lesson-head">
           <p>第四课 / 扩缩容的滞回</p>
-          <h2>扩缩容策略：检验并修复原有保证</h2>
+          <h2>扩缩容策略：构造反例与改进阈值</h2>
         </div>
         <p class="lesson-bridge">
           前三课的保证只适用于追加。加入删除后，原来的势能可能变负；这节课先构造一种失败的设计，再看怎样留出积累预算的空间。
         </p>
         <p class="section-intro">
-          两种策略都在写满时翻倍扩容。区别在删除之后：使用率 ≤ 1/2
+          两种策略都在写满时翻倍扩容。区别在删除之后：使用率 n/C ≤ 1/2
           就缩容，还是等到 ≤ 1/4？从 n = 9、C = 16 出发，交替删除、追加。
         </p>
         <div class="model-note">
@@ -724,7 +738,7 @@ import "../styles/course.css";
         <div class="lab">
           <div class="lab-top">
             <div>
-              <h3>同一段输入，两个成本轨迹</h3>
+              <h3>同一段输入，两种策略的基本操作次数</h3>
               <p>点“删除 → 追加”多做几轮。容量变化和费用来自实际模拟。</p>
             </div>
             <span id="resize-step" class="step-label">
@@ -765,20 +779,23 @@ import "../styles/course.css";
             </button>
           </div>
           <div class="chart-title">
-            <h4>累计实际成本</h4>
-            <span>相同坐标尺度；红色：1/2 策略，蓝色：1/4 策略</span>
+            <h4>累计基本操作次数</h4>
+            <span>
+              横轴：追加与删除次数；纵轴：累计基本操作次数。红色：1/2
+              策略，蓝色：1/4 策略
+            </span>
           </div>
           <div
             id="resize-chart"
             class="chart"
             role="img"
-            aria-label="两种缩容阈值的累计成本折线图"
+            aria-label="两种缩容阈值的累计基本操作次数折线图"
           ></div>
           <p id="resize-summary" class="live-feedback" role="status"></p>
         </div>
         <div class="explanation-grid">
           <div>
-            <h3>问题不是“缩容贵”，而是两次搬迁挨得太近。</h3>
+            <h3>半满缩容会让相邻两次操作都复制元素</h3>
             <p>
               1/2 策略把 16 缩到 8 时，数组恰好又满了。下一次追加立刻扩回
               16；删除又缩回 8。每对操作都复制 16 个元素。
@@ -789,7 +806,7 @@ import "../styles/course.css";
             </p>
             <p>
               即使要求从空数组开始，也可以先追加到 n = C/2 + 1，再重复 C 轮“删除
-              → 追加”。总操作数为 Θ(C)，总成本为
+              → 追加”。追加与删除合计 Θ(C) 次，实际执行的基本操作总次数为
               Θ(C²)，所以这种半满即缩容策略不能保证 O(1) 摊还。
             </p>
           </div>
@@ -797,11 +814,11 @@ import "../styles/course.css";
             <h3>滞回：为反向切换留一段距离。</h3>
             <p>
               1/4 策略把容量 C 缩到 C/2 后，至多半满。再次扩容前必须发生约 C/4
-              次追加；再次缩容也需要一段删除序列。便宜的操作重新积累预算。
+              次追加；再次缩容也需要一段删除序列。这些普通操作为下一次复制积累预算。
             </p>
             <p>
-              这个实验展示了机制，还不是对任意混合序列的完整证明。包含删除时，Φ
-              = 2n − C 可能变负，不能直接复用第三课的证明。
+              实验展示了特定序列的运行结果。要覆盖任意混合序列，还需处理删除操作：它可能使
+              Φ = 2n − C 变负，第三课依赖的势能非负条件随之失效。
             </p>
             <details>
               <summary>进阶：混合操作常用的分段势能</summary>
@@ -810,28 +827,30 @@ import "../styles/course.css";
                 n。两段在半满处都为 0，分别为扩容和缩容存储预算。
               </p>
               <p>
-                要完成证明，还需分别检查普通追加、普通删除、扩容、缩容，以及最小容量边界。这是下一步练习，不把图中有限次通过当作证明。
+                完整证明需要分别检查普通追加、普通删除、扩容、缩容，以及最小容量边界。可按这些情况继续推导每步的摊还上界。
               </p>
             </details>
           </div>
         </div>
         <div class="quiz" data-quiz="resize">
           <p class="question-label">精确核对一轮</p>
-          <h3>初始 n = 9、C = 16。先删除再追加，两种策略分别花多少？</h3>
+          <h3>
+            初始 n = 9、C = 16。先删除再追加，两种策略各执行多少次基本操作？
+          </h3>
           <div class="quiz-options"></div>
           <p class="quiz-feedback" role="status"></p>
           <button class="quiz-reset quiet">打乱选项，重试</button>
         </div>
         <button class="complete" data-complete="4">
-          我能构造抖动序列，并解释 1/4 阈值的作用
+          我能构造反复扩缩容的操作序列，并解释 1/4 阈值的作用
         </button>
       </section>
       <section class="closing" hidden>
-        <h2>把“看起来不贵”，变成一个不等式。</h2>
+        <h2>三种方法，证明同一个总成本上界</h2>
         <div class="recap">
           <div>
             <h3>聚合</h3>
-            <p>直接数完整序列的总账。</p>
+            <p>将完整序列的基本操作次数相加。</p>
             <code>T(m) &lt; 3m，m ≥ 1</code>
           </div>
           <div>
@@ -846,10 +865,10 @@ import "../styles/course.css";
           </div>
         </div>
         <details>
-          <summary>留一道真正需要推导的题</summary>
+          <summary>练习：固定增量扩容的总操作次数</summary>
           <p>
-            如果每次容量不是翻倍，而是增加固定的 8 个槽位，从容量 0 开始追加 m
-            个元素，总复制成本是什么量级？
+            如果每次容量固定增加 8 个槽位，从容量 0 开始追加 m
+            个元素，总复制次数是什么量级？
           </p>
           <details>
             <summary>查看推导线索</summary>

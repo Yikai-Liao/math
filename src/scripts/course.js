@@ -69,7 +69,7 @@ function costChart() {
   const root = $("#cost-chart");
   if (!records.length) {
     root.innerHTML =
-      '<p class="chart-empty">追加后，这里会出现真实成本；扩容时复制多少，就画多高。</p>';
+      '<p class="chart-empty">追加后显示每步的写入与复制次数，柱高等于两者之和。</p>';
     return;
   }
   const width = 720,
@@ -88,7 +88,7 @@ function costChart() {
   records.forEach((r, i) => {
     const x = left + i * slot + slot * 0.14,
       y = height - bottom - (r.cost / max) * plotHeight;
-    svg += `<g data-record="${i}" tabindex="0" role="button" aria-label="第 ${i + 1} 次：实际成本 ${r.cost}，复制 ${r.copies}" class="cost-column"><rect x="${x}" y="${y}" width="${barWidth}" height="${(r.copies / max) * plotHeight}" class="copy-bar"/><rect x="${x}" y="${height - bottom - plotHeight / max}" width="${barWidth}" height="${plotHeight / max}" class="write-bar"/><rect x="${x - 2}" y="10" width="${slot}" height="${height - 20}" fill="transparent"/>${i === 0 || (i + 1) % 4 === 0 || r.grows ? `<text x="${x + barWidth / 2}" y="204" text-anchor="middle" class="axis-label">${i + 1}</text>` : ""}</g>`;
+    svg += `<g data-record="${i}" tabindex="0" role="button" aria-label="第 ${i + 1} 次：基本操作 ${r.cost} 次，复制 ${r.copies}" class="cost-column"><rect x="${x}" y="${y}" width="${barWidth}" height="${(r.copies / max) * plotHeight}" class="copy-bar"/><rect x="${x}" y="${height - bottom - plotHeight / max}" width="${barWidth}" height="${plotHeight / max}" class="write-bar"/><rect x="${x - 2}" y="10" width="${slot}" height="${height - 20}" fill="transparent"/>${i === 0 || (i + 1) % 4 === 0 || r.grows ? `<text x="${x + barWidth / 2}" y="204" text-anchor="middle" class="axis-label">${i + 1}</text>` : ""}</g>`;
   });
   root.innerHTML = svg + "</svg>";
   root.querySelectorAll("[data-record]").forEach((bar) => {
@@ -118,19 +118,19 @@ function renderAppend() {
   $("#append-event").textContent = !r.n
     ? "空数组。追加第一个元素只写入一次。"
     : r.grows
-      ? `容量 ${r.beforeCapacity} → ${r.capacity}。复制 ${r.copies} 个旧元素，再写入 1 个新元素，本次共花 ${r.cost}。`
-      : `容量不变，直接写入：本次只花 1。下一次扩容发生在容量 ${r.capacity} 被用完之后。`;
+      ? `容量 ${r.beforeCapacity} → ${r.capacity}。复制 ${r.copies} 个旧元素，再写入 1 个新元素，本次共执行 ${r.cost} 次基本操作。`
+      : `容量不变，直接写入：本次写入 1 次。下一次扩容发生在容量 ${r.capacity} 被用完之后。`;
   renderArray();
   costChart();
   const copies = records.filter((r) => r.copies).map((r) => r.copies);
   $("#aggregate-sum").textContent =
-    `复制成本 = ${copies.length ? copies.join(" + ") + " = " + (r.total - r.n) : "0"}`;
+    `复制次数 = ${copies.length ? copies.join(" + ") + " = " + (r.total - r.n) : "0"}`;
   $("#aggregate-bound").textContent = r.n
     ? `T(${r.n}) = ${r.n} + ${r.total - r.n} = ${r.total} < ${3 * r.n}`
     : "T(0) = 0";
   $("#aggregate-explain").textContent = r.n
-    ? `当前平均成本 ${(r.total / r.n).toFixed(2)}；这是这段确定序列的总成本除以长度，不是概率期望。`
-    : "先运行几步，把抽象求和变成眼前的搬运记录。";
+    ? `每次追加平均执行 ${(r.total / r.n).toFixed(2)} 次基本操作，按 T(m) ÷ m 计算。`
+    : "运行追加操作，查看各次扩容的复制次数。";
   $("#append-one").disabled = r.n >= 64;
   $("#append-play").disabled = r.n >= 64;
   $("#append-jump").disabled = r.n >= 17;
@@ -185,7 +185,7 @@ function renderBanker() {
     ? `<div class="credit-spent" style="width:${(r.total / paid) * 100}%">已支付 ${r.total}</div><div class="credit-left" style="width:${(balance / paid) * 100}%">余额 ${balance}</div>`
     : '<p class="caption">还没有收支。</p>';
   $("#banker-event").innerHTML = r.n
-    ? `<h4>第 ${r.n} 次：收 3，付 ${r.cost}</h4><p>本次余额变化 ${3 - r.cost >= 0 ? "+" : ""}${3 - r.cost}。${r.copies ? "扩容从先前积累的信用中支取搬迁费。" : "没有大额搬迁费，预算留给未来。"}</p><p>累计：${paid} − ${r.total} = ${balance} ≥ 0。</p><p class="caption">这里每次都收 3，所以 m ≥ 1 时 B(m) = Φ(m) + 1；它与第三课的势能相差 1。</p>`
+    ? `<h4>第 ${r.n} 次：收 3，付 ${r.cost}</h4><p>本次余额变化 ${3 - r.cost >= 0 ? "+" : ""}${3 - r.cost}。${r.copies ? "扩容按复制次数扣除先前积累的信用。" : "本次写入消耗 1 点，剩余 2 点进入余额。"}</p><p>累计：${paid} − ${r.total} = ${balance} ≥ 0。</p><p class="caption">这里每次都收 3，所以 m ≥ 1 时 B(m) = Φ(m) + 1；它与第三课的势能相差 1。</p>`
     : "<h4>初始账户为 0</h4><p>先在第一课追加，或生成一段包含扩容的操作序列。</p>";
   $("#banker-prev").disabled = bankerIndex === 0;
   $("#banker-next").disabled = bankerIndex === records.length;
@@ -227,8 +227,8 @@ function renderPotential() {
     : r.n === 1
       ? "首次分配需要单独处理：成本 1，势能从 0 到 1，摊还成本为 2。"
       : r.copies
-        ? `实际成本 ${r.cost} 包含搬迁；势能变化 ${r.phi - r.beforePhi} 把先前积累的预算计入本次，因此摊还成本仍为 3。`
-        : "当前只花 1，但势能增加 2：这一步替未来存了预算，摊还成本为 3。";
+        ? `基本操作 ${r.cost} 次 包含复制；势能变化 ${r.phi - r.beforePhi} 把先前积累的预算计入本次，因此摊还成本仍为 3。`
+        : "本次写入 1 次，势能增加 2，摊还成本为 1 + 2 = 3。";
   $("#potential-prev").disabled = potentialIndex <= 1;
   $("#potential-next").disabled = potentialIndex >= records.length;
 }
@@ -355,8 +355,8 @@ function renderResize() {
   $("#resize-step").textContent = `${resizeCount} 次操作`;
   resizeChart();
   $("#resize-summary").textContent = resizeCount
-    ? `同样 ${resizeCount} 次操作，1/2 策略已花 ${bad.total}，1/4 策略已花 ${good.total}。${bad.total > good.total ? "差额来自重复搬迁。" : "继续尝试边界附近的删除与追加。"}`
-    : "先删除一个，再追加一个。观察哪种策略连续搬家。";
+    ? `同样 ${resizeCount} 次操作，1/2 策略累计 ${bad.total} 次，1/4 策略累计 ${good.total} 次。${bad.total > good.total ? "差额来自重复复制。" : "继续尝试边界附近的删除与追加。"}`
+    : "先删除一个，再追加一个。观察两种策略各复制了多少元素。";
   $("#resize-pop").disabled = bad.n === 0 || resizeCount >= 80;
   $("#resize-push").disabled = bad.n >= 40 || resizeCount >= 80;
   $("#resize-pair").disabled = bad.n === 0 || resizeCount >= 79;
@@ -403,7 +403,7 @@ const quizzes = {
       "51：摊还上界 3m 就是精确成本。",
     ],
     correct: 0,
-    why: "精确成本是 48。旧元素会在多次扩容中反复被复制；3m = 51 是上界，不是实际账单。",
+    why: "实际执行 48 次基本操作。旧元素会在多次扩容中反复被复制；3m = 51 给出了这段序列的总次数上界。",
   },
   banker: {
     answers: [
@@ -421,7 +421,7 @@ const quizzes = {
       "能；负势能意味着算法产生了能量。",
     ],
     correct: 0,
-    why: "恒等式是 T(m) = Σĉᵢ − Φₘ + Φ₀。这里 Φ₀ = 0，Φₘ = −m²，所以 T(m) = Σĉᵢ + m²。不能丢掉这个正的 m² 项。负势能本身不是数学错误；错误在于无依据地使用 T(m) ≤ Σĉᵢ。",
+    why: "恒等式是 T(m) = Σĉᵢ − Φₘ + Φ₀。这里 Φ₀ = 0，Φₘ = −m²，所以 T(m) = Σĉᵢ + m²。不能丢掉这个正的 m² 项。使用 T(m) ≤ Σĉᵢ 需要验证末态势能条件。",
   },
   resize: {
     answers: [
@@ -430,7 +430,7 @@ const quizzes = {
       "1/2 策略花 10；1/4 策略花 2。",
     ],
     correct: 0,
-    why: "1/2 策略删除后复制 8 个，下一次追加又复制 8 个，合计 (1+8)+(1+8)=18。1/4 策略两步都不触发搬迁，合计 2。",
+    why: "1/2 策略删除后复制 8 个，下一次追加又复制 8 个，合计 (1+8)+(1+8)=18。1/4 策略两步都只执行 1 次基本操作，合计 2。",
   },
 };
 function renderQuiz(root) {
@@ -450,7 +450,7 @@ function renderQuiz(root) {
         button.classList.add("selected");
         button.setAttribute("aria-pressed", "true");
         root.querySelector(".quiz-feedback").textContent =
-          (index === quiz.correct ? "计算成立。" : "重新核对成本或边界。") +
+          (index === quiz.correct ? "回答正确。" : "重新核对成本或边界。") +
           quiz.why;
       };
       options.append(button);
