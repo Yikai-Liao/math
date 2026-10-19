@@ -1,682 +1,569 @@
 ---
-const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
+import "../styles/course.css";
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#f1f4f8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f8fb" />
     <meta
       name="description"
-      content="一堂可以动手玩的数学语言课：用图形、动画和小实验，重新理解命题、量词、蕴含与证明。"
+      content="从动态数组的真实操作出发，用可交互实验推导聚合分析、记账法、势能法与扩缩容滞回。"
     />
-    <title>第一单元：数学的语言 · 一点一点</title>
-    <link rel="stylesheet" href={`${base}style.css`} />
-    <script src={`${base}app.js`} is:inline defer></script>
+    <title>摊还分析与势能法 · 第一单元</title>
+
+    <script>
+      import "../scripts/course.js";
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">
-      跳到课程
+      跳到实验
     </a>
     <header class="topbar">
-      <a class="brand" href="#">
-        一点一点<span>数学重启计划</span>
+      <a href="#" class="brand">
+        一点一点 <span>算法的数学</span>
       </a>
-      <a class="week-link" href="#roadmap">
-        第一单元：数学的语言{" "}
-        <svg class="inline-arrow" viewBox="0 0 20 20" aria-hidden="true">
-          <path
-            d="M4 16 16 4M5 4h11v11"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-        </svg>
-      </a>
+      <nav aria-label="课程导航">
+        <a href="#aggregate">聚合</a>
+        <a href="#banker">记账</a>
+        <a href="#potential">势能</a>
+        <a href="#hysteresis">滞回</a>
+      </nav>
     </header>
-    <main id="main">
-      <section class="hero wrap">
-        <div class="hero-copy">
-          <h1>
-            先让一句话，
-            <br />
-            <span class="coral">变得清楚。</span>
-          </h1>
-          <p class="hero-intro">
-            第一单元：数学的语言。
-            <br />
-            动手改一个条件，看结论怎样改变。
-          </p>
-          <a class="primary" href="#chapter1">
-            开始第一课{" "}
-            <svg class="inline-arrow" viewBox="0 0 20 20" aria-hidden="true">
-              <path
-                d="M4 16 16 4M5 4h11v11"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              />
-            </svg>
-          </a>
-          <div class="hero-meta">
-            <span>4 节课</span>
-            <span>约 45–60 分钟</span>
-            <span>进度保存在本机</span>
-          </div>
+    <main id="main" class="wrap">
+      <section class="opening">
+        <p class="unit-label">第一单元 · 摊还分析与势能法</p>
+        <h1>
+          一次很贵，
+          <br class="mobile-break" />
+          为什么长期不贵？
+        </h1>
+        <p class="intro">
+          扩容那一刻，动态数组要搬走所有元素。先运行一段操作，再把成本证明压到每次常数。
+        </p>
+        <div class="course-meta">
+          <span>本科算法分析</span>
+          <span>4 节课 · 约 60–90 分钟</span>
+          <span>需要：求和、基本代数、O 记号</span>
         </div>
-        <div class="hero-experiment">
-          <div class="experiment-heading">
-            <span>先试一个小实验</span>
-            <button id="hero-reset" class="text-button">
+      </section>
+      <section id="aggregate" class="lesson">
+        <div class="lesson-head">
+          <p>第一课 / 聚合分析</p>
+          <h2>别只盯着最高的那根柱子。</h2>
+        </div>
+        <div class="model-note">
+          <strong>统一成本模型</strong>
+          <span>
+            写入一个新元素计 1，复制一个旧元素计
+            1；不计申请内存、释放内存和其他固定开销。初始 n = C = 0；首次容量为
+            1，写满后容量翻倍。本课仅追加。
+          </span>
+        </div>
+        <div class="lab append-lab">
+          <div class="lab-top">
+            <div>
+              <h3>动态数组 · 可执行模型</h3>
+              <p>蓝色是已有元素，深色是刚写入的元素；红框表示这一步搬过家。</p>
+            </div>
+            <span id="append-step" class="step-label">
+              第 0 次追加
+            </span>
+          </div>
+          <div class="metrics">
+            <div>
+              <span>元素数 n</span>
+              <strong id="append-n">0</strong>
+            </div>
+            <div>
+              <span>容量 C</span>
+              <strong id="append-capacity">0</strong>
+            </div>
+            <div>
+              <span>本次实际成本 cᵢ</span>
+              <strong id="append-cost">0</strong>
+            </div>
+            <div>
+              <span>累计实际成本 T(m)</span>
+              <strong id="append-total">0</strong>
+            </div>
+          </div>
+          <div
+            id="array-cells"
+            class="array-cells"
+            aria-label="动态数组存储槽位"
+          ></div>
+          <p id="append-event" class="live-feedback" role="status">
+            空数组。追加第一个元素只写入一次。
+          </p>
+          <div class="controls">
+            <button id="append-one" class="primary">
+              追加一个
+            </button>
+            <button id="append-play">连续追加</button>
+            <button id="append-jump">运行到第 17 次</button>
+            <button id="append-reset" class="quiet">
               重置
             </button>
           </div>
-          <p class="experiment-question">
-            “这里的灯，<strong>全部亮着。</strong>”
-          </p>
+          <div class="chart-title">
+            <h4>每次操作的真实成本</h4>
+            <span>纵轴：单位操作；横轴：追加序号</span>
+          </div>
           <div
-            id="hero-lights"
-            class="hero-lights"
-            aria-label="五盏灯，点击切换亮灭"
+            id="cost-chart"
+            class="chart"
+            role="img"
+            aria-label="追加操作成本柱状图"
           ></div>
-          <div class="hero-verdict" aria-live="polite">
-            <strong id="hero-truth">真</strong>
-            <p id="hero-explanation">关掉任意一盏，看看这句话会怎样。</p>
+          <div class="chart-legend">
+            <span>
+              <i class="legend-blue"></i> 写入 1
+            </span>
+            <span>
+              <i class="legend-red"></i> 复制旧元素
+            </span>
+            <span class="muted">点柱子查看那一步</span>
           </div>
-          <p class="experiment-hint">点灯切换。范围只限眼前这五盏灯。</p>
-        </div>
-      </section>
-      <section id="roadmap" class="roadmap wrap">
-        <div class="section-label">
-          本单元路线 <span>从一句话，走到一个证明。</span>
-        </div>
-        <div class="route-grid">
-          <a href="#chapter1">
-            <b>01</b>
-            <span>第一课：命题</span>
-            <small>命题 · 约 10 分钟</small>
-          </a>
-          <a href="#chapter2">
-            <b>02</b>
-            <span>第二课：量词</span>
-            <small>量词 · 约 15 分钟</small>
-          </a>
-          <a href="#chapter3">
-            <b>03</b>
-            <span>第三课：蕴含</span>
-            <small>蕴含 · 约 15 分钟</small>
-          </a>
-          <a href="#chapter4">
-            <b>04</b>
-            <span>第四课：反例与证明</span>
-            <small>证明 · 约 15 分钟</small>
-          </a>
-        </div>
-      </section>
-      <section id="chapter1" class="chapter wrap">
-        <div class="chapter-heading">
-          <span class="chapter-num">01</span>
-          <div>
-            <p class="eyebrow">第一课：命题</p>
-            <h2>什么话，才算命题？</h2>
-          </div>
-          <span class="duration">约 10 分钟</span>
-        </div>
-        <div class="lesson-grid">
-          <div class="explain">
-            <p class="lead">
-              命题是一句<span class="highlight">有确定真假</span>的陈述。
-            </p>
-            <p>像一个真假开关。内容为假，也算命题。</p>
-            <div class="mini-example">
-              <span>“7 是偶数。”</span>
-              <strong>是命题，内容为假。</strong>
-              <p>“命题”不等于“正确的话”。错话也可以是命题。</p>
-            </div>
-            <details>
-              <summary>问题、要求，以及还没填完的句子</summary>
-              <p>“你吃了吗？”是问题；“请关门”是要求。它们没有真假值。</p>
-              <p>
-                “x &gt; 3”是含变量的陈述模板，叫<span class="term">谓词</span>
-                ，可记作 P(x)。先说明 x 的范围，再给 x
-                赋值或用量词约束它，就能组成命题。变量尚未被确定或约束时，也叫开放语句。
-              </p>
-            </details>
-            <details>
-              <summary>更准确一点：真假未知 ≠ 不是命题</summary>
-              <p>
-                在明确语境和经典逻辑中，“某个给定的巨大整数是质数”仍是命题，即使我们暂时没算出来。判断标准是有没有确定的真假，而不是我们是否已经知道答案。
-              </p>
-            </details>
-          </div>
-          <div class="lab">
-            <div class="lab-heading">
-              <span class="lab-tag">动手 01</span>
-              <h3>句子分拣机</h3>
-            </div>
-            <p>给句子选一个盒子，再看看理由。</p>
-            <div class="statement-card">
-              <span id="statement-count" class="eyebrow"></span>
-              <p id="statement-text"></p>
-            </div>
-            <div id="statement-options" class="button-grid"></div>
-            <p id="statement-feedback" class="feedback" role="status">
-              先做一个判断。猜错也没关系。
-            </p>
-            <div class="lab-footer">
-              <button id="statement-next" class="text-button">
-                下一句 →
-              </button>
-              <button id="statement-reset" class="text-button subtle">
-                重新开始
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="pause">
-          <b>停一下，自己说一句</b>
-          <p>
-            写出一个为假的命题，再把“x 是偶数”改成一个命题。你可以指定
-            x，也可以说“存在一个整数 x……”或“每个整数 x……”。
+          <p id="cost-detail" class="caption" role="status">
+            还没有操作。
           </p>
+        </div>
+        <div class="explanation-grid">
+          <div>
+            <h3>单次最坏，和序列最坏，是两件事。</h3>
+            <p>
+              装满 n 个元素时，下一次追加花 n + 1，单次最坏是
+              Θ(n)。但昂贵的扩容不会连续发生。
+            </p>
+            <p>
+              <strong>摊还 O(1)</strong>说的是：从空数组开始，任意长度 m
+              的追加序列，总成本是
+              O(m)。它不承诺每次操作都快，也不需要随机输入或概率分布。
+            </p>
+          </div>
+          <div class="derivation">
+            <p>复制发生在容量 1、2、4、8……用尽时。</p>
+            <div id="aggregate-sum" class="formula">
+              复制成本 = 0
+            </div>
+            <div id="aggregate-bound" class="formula">
+              T(0) = 0
+            </div>
+            <p id="aggregate-explain">
+              先运行几步，把抽象求和变成眼前的搬运记录。
+            </p>
+            <details>
+              <summary>展开严格的几何级数上界</summary>
+              <p>
+                m ≥ 2 时，设最后一次扩容前的容量为 2ᵏ，则 2ᵏ &lt;
+                m。累计复制数是 1 + 2 + … + 2ᵏ = 2ᵏ⁺¹ − 1 &lt; 2m。
+              </p>
+              <p>
+                加上 m 次新元素写入，T(m) &lt; 3m。m = 1 时 T(1) =
+                1，也满足这个界。m = 0 单独处理为 0。
+              </p>
+              <p>
+                这里的 O(1)
+                是每次操作的摊还上界；任意一次触发扩容的操作，仍然可能花线性时间。
+              </p>
+            </details>
+          </div>
+        </div>
+        <div class="quiz" data-quiz="aggregate">
+          <p class="question-label">推算一次边界</p>
+          <h3>从空数组追加 17 个元素。累计实际成本是多少？</h3>
+          <div class="quiz-options"></div>
+          <p class="quiz-feedback" role="status"></p>
+          <button class="quiz-reset quiet">打乱选项，重试</button>
         </div>
         <button class="complete" data-complete="1">
-          ○ 我能解释：命题可以为假
+          我能区分：单次最坏与摊还上界
         </button>
       </section>
-      <section id="chapter2" class="chapter wrap">
-        <div class="chapter-heading">
-          <span class="chapter-num">02</span>
+      <section id="banker" class="lesson">
+        <div class="lesson-head">
+          <p>第二课 / 记账法</p>
+          <h2>让便宜的操作，替昂贵的操作存钱。</h2>
+        </div>
+        <p class="section-intro">
+          沿用第一课的操作序列。每次追加收 3
+          个信用点，实际用了多少就付多少。信用点只是证明工具，不是运行时间。
+        </p>
+        <div class="lab">
+          <div class="lab-top">
+            <div>
+              <h3>一份可以逐行核对的账本</h3>
+              <p>
+                拖动查看前缀；先做一个预测：第 17 次扩容后，余额会不会变负？
+              </p>
+            </div>
+            <button id="banker-prepare">生成 17 次追加</button>
+          </div>
+          <label class="slider-label" for="banker-range">
+            查看前 m 次：<output id="banker-m">0</output>
+          </label>
+          <input id="banker-range" type="range" min="0" max="0" value="0" />
+          <div class="banker-view">
+            <div>
+              <div class="ledger-row">
+                <span>已收取的信用</span>
+                <strong id="banker-paid">0</strong>
+              </div>
+              <div class="ledger-row">
+                <span>已支付的实际成本</span>
+                <strong id="banker-spent">0</strong>
+              </div>
+              <div class="ledger-row balance">
+                <span>账户余额 B(m)</span>
+                <strong id="banker-balance">0</strong>
+              </div>
+              <div
+                id="credit-visual"
+                class="credit-visual"
+                aria-label="收入、支出和余额的比例"
+              ></div>
+            </div>
+            <div id="banker-event" class="reasoning" aria-live="polite"></div>
+          </div>
+          <div class="controls">
+            <button id="banker-prev">上一步</button>
+            <button id="banker-next">下一步</button>
+          </div>
+        </div>
+        <div class="explanation-grid">
           <div>
-            <p class="eyebrow">第二课：量词</p>
-            <h2>“所有”，与“至少一个”。</h2>
-          </div>
-          <span class="duration">约 15 分钟</span>
-        </div>
-        <div class="lesson-grid">
-          <div class="explain">
-            <p class="lead">
-              “所有”像检查每一扇门。
-              <br />
-              “存在”像找到一把钥匙。
+            <h3>“收 3”为什么不只是拍脑袋？</h3>
+            <p>
+              每次先花 1
+              写入。剩下的预算可以为将来的搬迁准备信用。扩容把成本一次花出去；之后很多不扩容的追加，把余额补回来。
             </p>
             <p>
-              先把讨论的范围说清楚，这叫<span class="term">论域</span>
-              。下面的小世界，只有六块积木。
+              关键不是平均收了多少，而是<strong>每一个前缀都不欠账</strong>
+              。B(m) = 3m − T(m) ≥ 0，才能推出 T(m) ≤ 3m。
             </p>
-            <div class="formula-pair">
-              <div>
-                <b>∀</b>
-                <span>
-                  <strong>所有 / 任意一个</strong>
-                  <small>每一块积木都是蓝色。</small>
-                </span>
-              </div>
-              <div>
-                <b>∃</b>
-                <span>
-                  <strong>存在 / 至少一个</strong>
-                  <small>至少一块积木是蓝色。</small>
-                </span>
-              </div>
-            </div>
+          </div>
+          <div class="derivation">
+            <h3>证明义务</h3>
             <p>
-              推翻“全部是”，只需要找到一个“不是”。推翻“至少有一个”，你得确认一个都没有。
+              不能因为这 17
+              行账本没变负，就宣布所有长度都成立。第一课的总量界已经能保证余额非负；下一课会给出只依赖当前状态的局部证明。
             </p>
-            <div class="note">
-              <b>否定不是随便换个反义词。</b>
-              <p>
-                “不是所有积木都蓝色”＝“至少一块不是蓝色”。
-                <br />
-                它并不意味着“所有积木都不是蓝色”。
-              </p>
-            </div>
-          </div>
-          <div class="lab">
-            <div class="lab-heading">
-              <span class="lab-tag">动手 02</span>
-              <h3>六块积木的小世界</h3>
-            </div>
-            <p>点一下积木切换颜色。观察“所有”什么时候失效。</p>
-            <div
-              id="blocks"
-              class="blocks"
-              aria-label="点击积木切换蓝色和红色"
-            ></div>
-            <div
-              id="quantifier-results"
-              class="truth-list"
-              aria-live="polite"
-            ></div>
-            <div class="lab-footer">
-              <button id="blocks-all" class="text-button">
-                全部变蓝
-              </button>
-              <button id="blocks-none" class="text-button">
-                全部变红
-              </button>
-              <button id="blocks-play" class="text-button">
-                ▶ 逐个检查
-              </button>
-            </div>
-            <p id="blocks-scan" class="feedback" role="status">
-              颜色不是线索的唯一来源：每块也标有文字。
+            <p class="formula">B(m) = 3m − Σ cᵢ</p>
+            <p>
+              看整个账本是记账法；把“还存着多少可用信用”写成状态函数，就接近势能法了。
             </p>
           </div>
         </div>
-        <div class="wide-lab lab">
-          <div class="lab-heading">
-            <span class="lab-tag">动手 03</span>
-            <h3>同样两个量词，换个顺序就变了</h3>
-          </div>
-          <p class="lead-small">
-            每个人都有一本喜欢的书 ≠ 有一本书被所有人喜欢。
-          </p>
-          <div class="grid-experiment">
-            <div>
-              <p>
-                点格子，表示“这个人喜欢这本书”。
-                <br />
-                默认每个人各喜欢一本不同的书。
-              </p>
-              <div
-                id="book-grid"
-                class="book-grid"
-                role="group"
-                aria-label="三个人与三本书的喜好表"
-              ></div>
-              <div class="lab-footer">
-                <button id="books-separate" class="text-button">
-                  各有所爱
-                </button>
-                <button id="books-shared" class="text-button">
-                  共同爱好
-                </button>
-                <button id="books-clear" class="text-button">
-                  清空
-                </button>
-              </div>
-            </div>
-            <div>
-              <div
-                id="book-results"
-                class="truth-list"
-                aria-live="polite"
-              ></div>
-              <p class="subtle">
-                第一句允许每个人选不同的书。第二句要求先固定同一本书，再让每个人都点头。
-              </p>
-              <details>
-                <summary>用符号看一遍</summary>
-                <p>
-                  设 L(p,b) 表示“人 p 喜欢书 b”。
-                  <br />
-                  ∀p ∃b L(p,b)：对每个人，可以找一本（可能不同的）书。
-                  <br />
-                  ∃b ∀p L(p,b)：能先找出一本书，让所有人都喜欢。
-                </p>
-                <p>
-                  在这里，第二句成立时，第一句一定成立；第一句成立时，第二句不一定成立。
-                </p>
-              </details>
-            </div>
-          </div>
-        </div>
-        <div class="quiz" data-quiz="negation">
-          <p class="eyebrow">试着说清楚 · 1 / 3</p>
-          <h3>“每个人都喜欢至少一本书”的否定是什么？</h3>
+        <div class="quiz" data-quiz="banker">
+          <p class="question-label">预算能不能再少一点？</p>
+          <h3>如果每次只收 2 点，哪一个前缀第一次出现负余额？</h3>
           <div class="quiz-options"></div>
-          <p class="quiz-feedback feedback" role="status"></p>
-          <button class="text-button quiz-reset">换个顺序再试</button>
-        </div>
-        <div class="pause">
-          <b>记住这对搭档</b>
-          <p>
-            ¬∀x P(x) ⇔ ∃x ¬P(x)　｜　¬∃x P(x) ⇔ ∀x ¬P(x)
-            <br />
-            <span class="subtle">
-              读作：并非全部满足 = 至少一个不满足；不存在满足者 = 全部不满足。
-            </span>
-          </p>
+          <p class="quiz-feedback" role="status"></p>
+          <button class="quiz-reset quiet">打乱选项，重试</button>
         </div>
         <button class="complete" data-complete="2">
-          ○ 我能解释：否定“所有”只需一个反例
+          我能解释：余额非负为什么能证明总成本上界
         </button>
       </section>
-      <section id="chapter3" class="chapter wrap">
-        <div class="chapter-heading">
-          <span class="chapter-num">03</span>
-          <div>
-            <p class="eyebrow">第三课：蕴含</p>
-            <h2>如果 P，那么 Q。</h2>
-          </div>
-          <span class="duration">约 15 分钟</span>
+      <section id="potential" class="lesson">
+        <div class="lesson-head">
+          <p>第三课 / 势能法</p>
+          <h2>把未来的搬迁费，写进当前状态。</h2>
         </div>
-        <div class="lesson-grid">
-          <div class="explain">
-            <p class="lead">
-              “只要是 4 的倍数，
-              <br />
-              就一定是偶数。”
-            </p>
-            <p>
-              前半句叫 P，后半句叫 Q。P ⇒ Q 只排除一种情况：
-              <span class="highlight">P 真、Q 假</span>。
-            </p>
-            <div class="set-diagram">
-              <svg
-                viewBox="0 0 460 205"
-                role="img"
-                aria-label="整数中，4的倍数集合包含在偶数集合里，6在偶数集合内但不在4的倍数集合内"
-              >
-                <rect
-                  x="5"
-                  y="5"
-                  width="450"
-                  height="195"
-                  rx="12"
-                  fill="#f1f4f8"
-                />
-                <text x="20" y="30" fill="#626e82" font-size="13">
-                  整数世界
-                </text>
-                <ellipse
-                  cx="245"
-                  cy="109"
-                  rx="173"
-                  ry="78"
-                  fill="#e7edfb"
-                  stroke="#3159bb"
-                />
-                <text x="312" y="73" fill="#3159bb" font-size="16">
-                  偶数 Q
-                </text>
-                <ellipse
-                  cx="195"
-                  cy="116"
-                  rx="94"
-                  ry="49"
-                  fill="#c6d4f8"
-                  stroke="#3159bb"
-                />
-                <text x="145" y="111" fill="#253d72" font-size="15">
-                  4 的倍数 P
-                </text>
-                <text x="145" y="137" fill="#253d72" font-size="15">
-                  4　8　12 …
-                </text>
-                <text x="332" y="131" fill="#a13c6b" font-size="21">
-                  6
-                </text>
-                <text x="30" y="163" fill="#626e82" font-size="17">
-                  3
-                </text>
-              </svg>
+        <p class="section-intro">
+          对这里从空数组出发、只追加且翻倍扩容的可达状态，选择 Φ(n,C) = 2n −
+          C。初始 Φ = 0；之后 n &gt; C/2，所以 Φ ≥ 0。
+        </p>
+        <div class="lab">
+          <div class="lab-top">
+            <div>
+              <h3>实际成本 + 势能变化</h3>
+              <p>选择一步，看看昂贵的复制怎样被势能下降抵消。</p>
             </div>
+            <button id="potential-prepare">生成 17 次追加</button>
+          </div>
+          <label class="slider-label" for="potential-range">
+            查看第 i 次操作：<output id="potential-i">—</output>
+          </label>
+          <input id="potential-range" type="range" min="1" max="1" value="1" />
+          <div class="potential-flow">
+            <div>
+              <span>操作前 Φᵢ₋₁</span>
+              <strong id="phi-before">0</strong>
+              <div id="phi-before-bar" class="potential-bar"></div>
+            </div>
+            <div class="potential-middle">
+              <span id="potential-operation">先追加一个元素</span>
+              <strong>→</strong>
+            </div>
+            <div>
+              <span>操作后 Φᵢ</span>
+              <strong id="phi-after">0</strong>
+              <div id="phi-after-bar" class="potential-bar"></div>
+            </div>
+          </div>
+          <div id="potential-equation" class="big-equation" aria-live="polite">
+            ĉᵢ = cᵢ + Φᵢ − Φᵢ₋₁
+          </div>
+          <p id="potential-reason" class="live-feedback"></p>
+          <div class="controls">
+            <button id="potential-prev">上一步</button>
+            <button id="potential-next">下一步</button>
+          </div>
+        </div>
+        <div class="proof">
+          <h3>局部计算，拼成全局证明。</h3>
+          <div class="proof-cases">
+            <div>
+              <span>首次追加</span>
+              <p>c = 1，ΔΦ = 1</p>
+              <strong>ĉ = 2</strong>
+            </div>
+            <div>
+              <span>不扩容</span>
+              <p>c = 1，ΔΦ = 2</p>
+              <strong>ĉ = 3</strong>
+            </div>
+            <div>
+              <span>从满容量 C 翻倍</span>
+              <p>c = C + 1，ΔΦ = 2 − C</p>
+              <strong>ĉ = 3</strong>
+            </div>
+          </div>
+          <details>
+            <summary>核对扩容时的两边状态</summary>
             <p>
-              <strong>P 是 Q 的充分条件</strong>：有 P 就够保证 Q。
-              <br />
-              <strong>Q 是 P 的必要条件</strong>：想要 P，缺 Q 不行。
+              操作前 n = C，Φ前 = 2C − C = C。操作后 n′ = C + 1，C′ = 2C，Φ后 =
+              2(C + 1) − 2C = 2。
             </p>
-            <div class="note">
-              <b>逻辑关系，不是因果关系。</b>
+            <p>
+              因此 ĉ = (C + 1) + (2 − C) = 3。首次从容量 0 分配到 1
+              的情况必须单独算，不能套用“0 翻倍”。
+            </p>
+          </details>
+          <div class="telescope">
+            <div class="lab-top">
+              <h3>将相邻步骤的势能项配对，再消掉</h3>
+              <button id="telescope-toggle">显示抵消</button>
+            </div>
+            <div id="telescope-expression" class="telescoping-expression">
               <p>
-                “是 4
-                的倍数”不会把一个数“变成”偶数。这里只是在说两个性质之间的保证关系。
+                Σ ĉᵢ = Σ cᵢ − Φ₀ + <span class="cancel-term">(Φ₁ − Φ₁)</span> +{" "}
+                <span class="cancel-term">(Φ₂ − Φ₂)</span> + … + Φₘ
               </p>
+              <p class="telescope-final">= Σ cᵢ + Φₘ − Φ₀</p>
             </div>
-          </div>
-          <div class="lab">
-            <div class="lab-heading">
-              <span class="lab-tag">动手 04</span>
-              <h3>一条规则，四种情形</h3>
-            </div>
-            <p>选择真假组合，看看哪一种才算违约。</p>
-            <div id="implication-cases" class="case-buttons"></div>
-            <div
-              id="implication-display"
-              class="implication-display"
-              aria-live="polite"
-            ></div>
-            <div class="lab-footer">
-              <button id="implication-next" class="text-button">
-                下一步 →
-              </button>
-              <button id="implication-play" class="text-button">
-                ▶ 自动演示
-              </button>
-            </div>
-            <p class="subtle">
-              这里判断的是经典逻辑中的“实质蕴含”。当前提为假，这一组合不会推翻规则；并不表示我们因此证明了结论。
+            <p class="formula">Σ cᵢ = Σ ĉᵢ − Φₘ + Φ₀ ≤ Σ ĉᵢ ≤ 3m</p>
+            <p>
+              最后的不等式用到了 Φ₀ = 0 和 Φₘ ≥
+              0。势能不是随便挑一个公式：需要验证每步的摊还成本，也需要控制初末势能。
             </p>
           </div>
         </div>
-        <div class="direction-strip">
-          <div>
-            <span>原命题</span>
-            <strong>4 的倍数 → 偶数</strong>
-            <small>真：4k = 2(2k)</small>
-          </div>
-          <div>
-            <span>逆命题</span>
-            <strong>偶数 → 4 的倍数</strong>
-            <small>假：6 就是反例</small>
-          </div>
-          <div>
-            <span>逆否命题</span>
-            <strong>不是偶数 → 不是 4 的倍数</strong>
-            <small>真：与原命题等价</small>
-          </div>
-        </div>
-        <div class="quiz" data-quiz="condition">
-          <p class="eyebrow">试着说清楚 · 2 / 3</p>
-          <h3>在整数里，“是偶数”是“是 4 的倍数”的什么条件？</h3>
+        <div class="quiz" data-quiz="potential">
+          <p class="question-label">检查一个看似更漂亮的证明</p>
+          <h3>
+            把 Φ 改成 −n²，每步 ĉᵢ 都不大于 0。能因此直接推出 T(m) ≤ Σĉᵢ，甚至
+            T(m) ≤ 0 吗？
+          </h3>
           <div class="quiz-options"></div>
-          <p class="quiz-feedback feedback" role="status"></p>
-          <button class="text-button quiz-reset">换个顺序再试</button>
-        </div>
-        <div class="pause">
-          <b>常见的方向错误</b>
-          <p>
-            知道 P ⇒ Q，再知道 Q 为真，不能倒推出 P。
-            <br />
-            就像知道“4 的倍数都是偶数”，看见一个偶数，还不能确定它是 4 的倍数。
-          </p>
+          <p class="quiz-feedback" role="status"></p>
+          <button class="quiz-reset quiet">打乱选项，重试</button>
         </div>
         <button class="complete" data-complete="3">
-          ○ 我能解释：有 P 就够，缺 Q 不行
+          我能从局部势能变化，写出望远镜求和
         </button>
       </section>
-      <section id="chapter4" class="chapter wrap">
-        <div class="chapter-heading">
-          <span class="chapter-num">04</span>
-          <div>
-            <p class="eyebrow">第四课：反例与证明</p>
-            <h2>一个反例，胜过一百次通过。</h2>
-          </div>
-          <span class="duration">约 15 分钟</span>
+      <section id="hysteresis" class="lesson">
+        <div class="lesson-head">
+          <p>第四课 / 扩缩容的滞回</p>
+          <h2>刚搬完家，又要搬回去？</h2>
         </div>
-        <div class="lesson-grid">
-          <div class="explain">
-            <p class="lead">
-              例子让你猜。
-              <br />
-              反例让你停。
-              <br />
-              证明让你确定。
+        <p class="section-intro">
+          两种策略都在写满时翻倍扩容。区别在删除之后：使用率 ≤ 1/2
+          就缩容，还是等到 ≤ 1/4？从 n = 9、C = 16 出发，交替删除、追加。
+        </p>
+        <div class="model-note">
+          <strong>本实验的补充约定</strong>
+          <span>
+            删除一个末尾元素也计 1；缩容复制剩余元素，每个计
+            1。每次删除最多将容量减半一次，最小容量为 2；删除空数组不产生操作。
+          </span>
+        </div>
+        <div class="lab">
+          <div class="lab-top">
+            <div>
+              <h3>同一段输入，两个成本轨迹</h3>
+              <p>点“删除 → 追加”多做几轮。容量变化和费用来自实际模拟。</p>
+            </div>
+            <span id="resize-step" class="step-label">
+              0 次操作
+            </span>
+          </div>
+          <div class="strategy-grid">
+            <div class="strategy bad">
+              <h4>过早缩容：≤ 1/2</h4>
+              <p id="bad-state"></p>
+              <div id="bad-cells" class="resize-cells"></div>
+              <div class="strategy-cost">
+                <span>累计成本</span>
+                <strong id="bad-total">0</strong>
+              </div>
+              <p id="bad-event" class="caption"></p>
+            </div>
+            <div class="strategy good">
+              <h4>留出缓冲：≤ 1/4</h4>
+              <p id="good-state"></p>
+              <div id="good-cells" class="resize-cells"></div>
+              <div class="strategy-cost">
+                <span>累计成本</span>
+                <strong id="good-total">0</strong>
+              </div>
+              <p id="good-event" class="caption"></p>
+            </div>
+          </div>
+          <div class="controls">
+            <button id="resize-pop" class="primary">
+              删除一个
+            </button>
+            <button id="resize-push">追加一个</button>
+            <button id="resize-pair">删除 → 追加</button>
+            <button id="resize-play">连续交替</button>
+            <button id="resize-reset" class="quiet">
+              重置
+            </button>
+          </div>
+          <div class="chart-title">
+            <h4>累计实际成本</h4>
+            <span>相同坐标尺度；红色：1/2 策略，蓝色：1/4 策略</span>
+          </div>
+          <div
+            id="resize-chart"
+            class="chart"
+            role="img"
+            aria-label="两种缩容阈值的累计成本折线图"
+          ></div>
+          <p id="resize-summary" class="live-feedback" role="status"></p>
+        </div>
+        <div class="explanation-grid">
+          <div>
+            <h3>问题不是“缩容贵”，而是两次搬迁挨得太近。</h3>
+            <p>
+              1/2 策略把 16 缩到 8 时，数组恰好又满了。下一次追加立刻扩回
+              16；删除又缩回 8。每对操作都复制 16 个元素。
             </p>
             <p>
-              探测器里的猜想声称：对<span class="highlight">所有正整数 n</span>
-              ，公式算出来都是质数。先检查几个，再猜下一个。
+              取任意大的二次幂 C ≥ 4，初始 n = C/2 + 1。这样一对操作的成本是 C +
+              2，不能得到与 C 无关的每次常数界。
             </p>
-            <div class="note">
-              <b>一个反例，到底证明了什么？</b>
-              <p>
-                它能推翻“所有都成立”。它不能证明“所有都不成立”，也不能自动告诉我们正确规律是什么。
-              </p>
-            </div>
+            <p>
+              即使要求从空数组开始，也可以先追加到 n = C/2 + 1，再重复 C 轮“删除
+              → 追加”。总操作数为 Θ(C)，总成本为
+              Θ(C²)，所以这种半满即缩容策略不能保证 O(1) 摊还。
+            </p>
+          </div>
+          <div class="derivation">
+            <h3>滞回：为反向切换留一段距离。</h3>
+            <p>
+              1/4 策略把容量 C 缩到 C/2 后，至多半满。再次扩容前必须发生约 C/4
+              次追加；再次缩容也需要一段删除序列。便宜的操作重新积累预算。
+            </p>
+            <p>
+              这个实验展示了机制，还不是对任意混合序列的完整证明。包含删除时，Φ
+              = 2n − C 可能变负，不能直接复用第三课的证明。
+            </p>
             <details>
-              <summary>有限世界可以检查完吗？</summary>
+              <summary>进阶：混合操作常用的分段势能</summary>
               <p>
-                可以。如果命题只说 n = 1 到 39，且准确、完整地检查了每个 n
-                对应的计算结果都为质数，穷举就能证明这个有限命题。不能把它扩张成所有正整数。
+                常见选择是：n ≥ C/2 时取 Φ = 2n − C；n &lt; C/2 时取 Φ = C/2 −
+                n。两段在半满处都为 0，分别为扩容和缩容存储预算。
+              </p>
+              <p>
+                要完成证明，还需分别检查普通追加、普通删除、扩容、缩容，以及最小容量边界。这是下一步练习，不把图中有限次通过当作证明。
               </p>
             </details>
           </div>
-          <div class="lab">
-            <div class="lab-heading">
-              <span class="lab-tag">动手 05</span>
-              <h3>反例探测器</h3>
-            </div>
-            <p class="machine-formula">
-              n² + n + 41 <span>总是质数？</span>
-            </p>
-            <label class="range-label" for="number-range">
-              检查 n = <output id="number-label">1</output>
-            </label>
-            <input id="number-range" type="range" min="1" max="45" value="1" />
-            <div
-              id="machine-result"
-              class="machine-result"
-              aria-live="polite"
-            ></div>
-            <div
-              id="number-trail"
-              class="number-trail"
-              aria-label="当前已经检查的整数"
-            ></div>
-            <p id="checked-count" class="subtle"></p>
-            <div class="lab-footer">
-              <button id="number-next" class="text-button">
-                检查下一个 →
-              </button>
-              <button id="number-play" class="text-button">
-                ▶ 连续检查
-              </button>
-              <button id="number-reset" class="text-button">
-                重置
-              </button>
-            </div>
-            <p id="machine-lesson" class="feedback">
-              滑动或逐个检查。绿色只表示这个输入通过。
-            </p>
-          </div>
         </div>
-        <div class="wide-lab lab proof-lab">
-          <div class="lab-heading">
-            <span class="lab-tag">动手 06</span>
-            <h3>不试遍所有数，也能覆盖所有数</h3>
-          </div>
-          <p class="lead-small">证明：任意两个偶数的和，仍然是偶数。</p>
-          <div class="proof-stage">
-            <div
-              id="proof-visual"
-              class="proof-visual"
-              aria-hidden="true"
-            ></div>
-            <div>
-              <p id="proof-step-label" class="eyebrow"></p>
-              <h4 id="proof-title"></h4>
-              <p id="proof-text" aria-live="polite"></p>
-              <p id="proof-formula" class="proof-formula"></p>
-            </div>
-          </div>
-          <div class="lab-footer">
-            <button id="proof-prev" class="text-button">
-              ← 上一步
-            </button>
-            <span id="proof-count" class="subtle"></span>
-            <button id="proof-next" class="text-button">
-              下一步 →
-            </button>
-          </div>
-          <p class="subtle">
-            图中点的数量只是帮助理解。证明的关键是 a、b
-            是任意整数；它们也可以为零或负数。
-          </p>
-        </div>
-        <div class="quiz" data-quiz="proof">
-          <p class="eyebrow">试着说清楚 · 3 / 3</p>
-          <h3>程序检查了前一百万个正整数，都通过。能得出什么？</h3>
+        <div class="quiz" data-quiz="resize">
+          <p class="question-label">精确核对一轮</p>
+          <h3>初始 n = 9、C = 16。先删除再追加，两种策略分别花多少？</h3>
           <div class="quiz-options"></div>
-          <p class="quiz-feedback feedback" role="status"></p>
-          <button class="text-button quiz-reset">换个顺序再试</button>
+          <p class="quiz-feedback" role="status"></p>
+          <button class="quiz-reset quiet">打乱选项，重试</button>
         </div>
         <button class="complete" data-complete="4">
-          ○ 我能解释：检查有限个例子，不等于证明无限情况
+          我能构造抖动序列，并解释 1/4 阈值的作用
         </button>
       </section>
-      <section class="finish wrap">
-        <h2>
-          你已经有了一副
-          <br />
-          读数学的<span class="coral">新眼镜</span>。
-        </h2>
-        <p>以后遇到一个结论，先问这四个问题。</p>
+      <section class="closing">
+        <h2>把“看起来不贵”，变成一个不等式。</h2>
         <div class="recap">
           <div>
-            <b>01</b>
-            <p>它是能判断真假的话吗？</p>
+            <h3>聚合</h3>
+            <p>直接数完整序列的总账。</p>
+            <code>T(m) &lt; 3m，m ≥ 1</code>
           </div>
           <div>
-            <b>02</b>
-            <p>在什么范围？所有，还是存在？</p>
+            <h3>记账</h3>
+            <p>每个前缀都不透支。</p>
+            <code>B(m) = 3m − T(m) ≥ 0</code>
           </div>
           <div>
-            <b>03</b>
-            <p>谁保证谁？方向有没有倒过来？</p>
-          </div>
-          <div>
-            <b>04</b>
-            <p>这是例子、反例，还是覆盖全部的证明？</p>
+            <h3>势能</h3>
+            <p>用状态函数转移支付时间。</p>
+            <code>ĉᵢ = cᵢ + ΔΦᵢ</code>
           </div>
         </div>
-        <div class="exit-ticket">
-          <h3>离开前，用自己的话回答</h3>
-          <p>“所有会编程的人都懂数学。”</p>
-          <ol>
-            <li>要推翻这句话，需要找到什么样的人？</li>
-            <li>它的逆命题是什么？原命题成立时，逆命题一定成立吗？</li>
-            <li>如果认识的十个人都符合，能证明它吗？</li>
-          </ol>
+        <details>
+          <summary>留一道真正需要推导的题</summary>
+          <p>
+            如果每次容量不是翻倍，而是增加固定的 8 个槽位，从容量 0 开始追加 m
+            个元素，总复制成本是什么量级？
+          </p>
           <details>
-            <summary>展开参考思路</summary>
+            <summary>查看推导线索</summary>
             <p>
-              1. 找到一个会编程、但不懂数学的人（先明确这两个概念的判断标准）。
-              <br />
-              2.
-              逆命题是“所有懂数学的人都会编程”。不一定成立，原方向不保证反方向。
-              <br />
-              3.
-              不能。这十个人只覆盖了一小部分。若讨论范围明确只有这十个人，且逐一确认，则可以证明这个有限范围内的命题。
-            </p>
-            <p>
-              现实语言中的“懂数学”很模糊。这也提醒我们：严谨讨论前，先把定义和范围说清楚。
+              复制规模是 8、16、24……直到小于 m 的最后一个 8 的倍数。设 k = ⌊(m −
+              1)/8⌋，复制成本为 8(1 + … + k) = 4k(k + 1)，总成本是 m + 4k(k + 1)
+              = Θ(m²)。固定增量扩容没有几何级数的性质。
             </p>
           </details>
-        </div>
+        </details>
         <div class="progress-summary">
-          <p id="progress-text">已标记理解 0 / 4 课</p>
+          <span id="progress-text">已标记理解 0 / 4 课</span>
+          <button id="progress-reset" class="quiet">
+            清除进度
+          </button>
           <div class="progress-track">
             <div id="progress-fill"></div>
           </div>
-          <p class="subtle">
-            进度只保存在当前浏览器，不上传。是否掌握，由你自己判断。
+          <p class="caption">
+            学习进度只保存在当前浏览器；实验状态刷新后重置。
           </p>
-          <button id="progress-reset" class="text-button">
-            清除本地学习进度
-          </button>
         </div>
-        <a class="primary" href="#chapter1">
-          回看第一课 ↑
-        </a>
       </section>
+      <footer>
+        <span>一点一点 · 算法的数学</span>
+        <a
+          href="https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-2-data-structures-and-dynamic-arrays/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          延伸：MIT 动态数组
+        </a>
+        <a
+          href="https://www.cs.cornell.edu/courses/cs3110/2012fa/recitations/rec24.html"
+          target="_blank"
+          rel="noreferrer"
+        >
+          延伸：Cornell 势能法
+        </a>
+        <a href="#main">回到实验</a>
+      </footer>
     </main>
-    <footer class="wrap">
-      <span>一点一点 · 数学重启计划</span>
-      <span>第一单元 / 让每一句话都更清楚</span>
-    </footer>
   </body>
 </html>
