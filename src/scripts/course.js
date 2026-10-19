@@ -503,3 +503,60 @@ document.addEventListener("visibilitychange", () => {
 renderAppend();
 renderResize();
 renderProgress();
+
+// 使用原生 hash 保存当前课，支持深链接、前进和后退；切课保留实验数据。
+const courseMenu = document.querySelector("#course-menu");
+const menuOpen = document.querySelector("#course-menu-open");
+menuOpen.addEventListener("click", () => courseMenu.showModal());
+document
+  .querySelector("#course-menu-close")
+  .addEventListener("click", () => courseMenu.close());
+courseMenu.addEventListener("click", (event) => {
+  if (event.target !== courseMenu) return;
+  const rect = courseMenu.getBoundingClientRect();
+  if (
+    event.clientX < rect.left ||
+    event.clientX > rect.right ||
+    event.clientY < rect.top ||
+    event.clientY > rect.bottom
+  )
+    courseMenu.close();
+});
+const courseSectionIds = [
+  "overview",
+  "aggregate",
+  "banker",
+  "potential",
+  "hysteresis",
+];
+function showCourseView() {
+  const requested = window.location.hash.slice(1);
+  const active = courseSectionIds.includes(requested) ? requested : "overview";
+  stopAppend();
+  stopResize();
+  courseSectionIds.forEach((id) => {
+    document.getElementById(id).hidden = id !== active;
+  });
+  document.querySelector(".closing").hidden = active !== "hysteresis";
+  document.querySelectorAll("[data-course-link]").forEach((link) => {
+    const current = link.dataset.courseLink === active;
+    link.classList.toggle("current", current);
+    if (current) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  if (courseMenu.open) courseMenu.close();
+  const currentView = document.getElementById(active);
+  currentView.setAttribute("tabindex", "-1");
+  currentView.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+window.addEventListener("hashchange", showCourseView);
+document.querySelectorAll("[data-course-link]").forEach((link) => {
+  link.addEventListener("click", () => {
+    if (window.location.hash === link.getAttribute("href")) showCourseView();
+  });
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900 && courseMenu.open) courseMenu.close();
+});
+showCourseView();

@@ -12,7 +12,7 @@ import "../styles/course.css";
       name="description"
       content="从动态数组的真实操作出发，用可交互实验推导聚合分析、记账法、势能法与扩缩容滞回。"
     />
-    <title>摊还分析与势能法 · 第一单元</title>
+    <title>摊还分析：计算一串操作的总成本 · 一点一点</title>
 
     <script>
       import "../scripts/course.js";
@@ -20,40 +20,237 @@ import "../styles/course.css";
   </head>
   <body>
     <a class="skip" href="#main">
-      跳到实验
+      跳到课程内容
     </a>
     <header class="topbar">
-      <a href="#" class="brand">
-        一点一点 <span>算法的数学</span>
+      <a href="#overview" class="brand">
+        一点一点 <span>数学方法</span>
       </a>
-      <nav aria-label="课程导航">
-        <a href="#aggregate">聚合</a>
-        <a href="#banker">记账</a>
-        <a href="#potential">势能</a>
-        <a href="#hysteresis">滞回</a>
-      </nav>
+      <span class="header-context">从具体问题到模型与证明</span>
+      <button
+        id="course-menu-open"
+        class="menu-toggle"
+        aria-haspopup="dialog"
+        aria-controls="course-menu"
+      >
+        课程目录
+      </button>
     </header>
-    <main id="main" class="wrap">
-      <section class="opening">
+    <aside class="course-sidebar" aria-label="课程目录">
+      <div class="sidebar-heading">学习路线</div>
+      <nav>
+        <a
+          href="#overview"
+          data-course-link="overview"
+          class="course-overview-link"
+        >
+          课程概览
+        </a>
+        <div class="nav-unit">
+          <span class="nav-label">第一单元 · 已开放</span>
+          <strong>摊还分析与势能法</strong>
+        </div>
+        <a href="#aggregate" data-course-link="aggregate">
+          <span>01</span>
+          <div>
+            计算一串操作的总成本<small>聚合分析 · 从实验到上界</small>
+          </div>
+        </a>
+        <a href="#banker" data-course-link="banker">
+          <span>02</span>
+          <div>
+            把总成本分配给每一步<small>记账法 · 前缀不能欠账</small>
+          </div>
+        </a>
+        <a href="#potential" data-course-link="potential">
+          <span>03</span>
+          <div>
+            用状态函数完成证明<small>势能法 · 望远镜求和</small>
+          </div>
+        </a>
+        <a href="#hysteresis" data-course-link="hysteresis">
+          <span>04</span>
+          <div>
+            把分析用于扩缩容设计<small>滞回 · 构造与修复坏序列</small>
+          </div>
+        </a>
+        <div class="nav-future">
+          <span class="nav-label">后续方向 · 待安排</span>
+          <p>组合计数与递推关系</p>
+          <p>概率、优化与数值误差</p>
+          <small>尚未开放，不影响本单元学习。</small>
+        </div>
+      </nav>
+      <p class="sidebar-note">
+        先理解模型，再操作、推导和检验。
+        <br />
+        本单元 4 课，按自己的节奏学习。
+      </p>
+    </aside>
+    <dialog
+      id="course-menu"
+      class="course-drawer"
+      aria-labelledby="course-menu-title"
+    >
+      <div class="drawer-heading">
+        <h2 id="course-menu-title">课程目录</h2>
+        <button id="course-menu-close" aria-label="关闭课程目录">
+          关闭
+        </button>
+      </div>
+      <nav>
+        <a
+          href="#overview"
+          data-course-link="overview"
+          class="course-overview-link"
+        >
+          课程概览
+        </a>
+        <div class="nav-unit">
+          <span class="nav-label">第一单元 · 已开放</span>
+          <strong>摊还分析与势能法</strong>
+        </div>
+        <a href="#aggregate" data-course-link="aggregate">
+          <span>01</span>
+          <div>
+            计算一串操作的总成本<small>聚合分析 · 从实验到上界</small>
+          </div>
+        </a>
+        <a href="#banker" data-course-link="banker">
+          <span>02</span>
+          <div>
+            把总成本分配给每一步<small>记账法 · 前缀不能欠账</small>
+          </div>
+        </a>
+        <a href="#potential" data-course-link="potential">
+          <span>03</span>
+          <div>
+            用状态函数完成证明<small>势能法 · 望远镜求和</small>
+          </div>
+        </a>
+        <a href="#hysteresis" data-course-link="hysteresis">
+          <span>04</span>
+          <div>
+            把分析用于扩缩容设计<small>滞回 · 构造与修复坏序列</small>
+          </div>
+        </a>
+        <div class="nav-future">
+          <span class="nav-label">后续方向 · 待安排</span>
+          <p>组合计数与递推关系</p>
+          <p>概率、优化与数值误差</p>
+          <small>尚未开放，不影响本单元学习。</small>
+        </div>
+      </nav>
+    </dialog>
+    <main id="main" class="wrap course-main">
+      <section id="overview" class="opening">
         <p class="unit-label">第一单元 · 摊还分析与势能法</p>
         <h1>
-          一次很贵，
-          <br class="mobile-break" />
-          为什么长期不贵？
+          摊还分析：
+          <br />
+          计算一串操作的总成本
         </h1>
         <p class="intro">
-          扩容那一刻，动态数组要搬走所有元素。先运行一段操作，再把成本证明压到每次常数。
+          这门课帮助你恢复本科层面的数学推理：
+          <strong>
+            怎样建立模型、说明假设、完成证明，并判断结论适用于哪里？
+          </strong>
+          本单元用动态数组的成本分析，把这套方法完整练习一次；动态数组是具体对象，建模与证明才是贯穿课程的能力。
         </p>
-        <div class="course-meta">
-          <span>本科算法分析</span>
-          <span>4 节课 · 约 60–90 分钟</span>
-          <span>需要：求和、基本代数、O 记号</span>
+        <div class="overview-purpose">
+          <h2>这一单元要解决什么？</h2>
+          <p>
+            动态数组大多数时候添加元素很快，偶尔扩容却要复制整个数组。只看最慢的一次，会高估一长串操作的总成本。
+            <strong>摊还分析</strong>研究整段操作如何分担这些偶尔出现的大开销。
+          </p>
+          <p>
+            学完后，你应能证明从空数组开始、翻倍扩容的 m 次追加总成本为
+            O(m)，并用反例解释为什么“半满就缩容”会破坏这个保证。
+          </p>
         </div>
+        <div class="learning-path" aria-label="本单元的四步推导路线">
+          <a href="#aggregate">
+            <b>先算总账</b>
+            <span>数清写入与复制</span>
+          </a>
+          <a href="#banker">
+            <b>再分配预算</b>
+            <span>每步收费，不能透支</span>
+          </a>
+          <a href="#potential">
+            <b>把预算写成证明</b>
+            <span>用状态函数代替整本账</span>
+          </a>
+          <a href="#hysteresis">
+            <b>最后检验设计</b>
+            <span>让扩容与缩容保持距离</span>
+          </a>
+        </div>
+        <div class="course-meta">
+          <span>需要：求和、基本代数、O 记号</span>
+          <span>不需要概率论</span>
+          <span>四个实验共用同一个动态数组模型</span>
+        </div>
+        <a class="overview-start" href="#aggregate">
+          进入第一课：先看动态数组怎样工作
+        </a>
       </section>
-      <section id="aggregate" class="lesson">
+      <section id="aggregate" class="lesson" hidden>
         <div class="lesson-head">
           <p>第一课 / 聚合分析</p>
-          <h2>别只盯着最高的那根柱子。</h2>
+          <h2>聚合分析：求出连续 m 次追加的总成本</h2>
+        </div>
+        <div class="lesson-context">
+          <p>
+            <strong>这节课的目标：</strong>
+            从实际运行中找到扩容发生的规律，再用几何级数证明总成本上界。
+          </p>
+        </div>
+        <div class="concept-intro">
+          <div>
+            <h3>先认识模型：什么是动态数组？</h3>
+            <p>
+              数组有一排连续的存储槽位。<strong>n</strong> 是已经放入的元素数，
+              <strong>C</strong> 是当前能放下的元素数，也就是容量。
+            </p>
+            <p>
+              <strong>追加</strong>
+              是在末尾放入一个新元素。还有空位时直接写入；没有空位时，申请一个更大的数组，复制旧元素，再写入新元素。这里每次把容量翻倍。
+            </p>
+          </div>
+          <div
+            class="array-primer"
+            aria-label="容量为四的数组满了，追加第五个元素时容量变为八"
+          >
+            <div>
+              <span>满了：n = 4，C = 4</span>
+              <div class="primer-slots">
+                <i>1</i>
+                <i>2</i>
+                <i>3</i>
+                <i>4</i>
+              </div>
+            </div>
+            <p>追加第 5 个：复制 4 个旧元素 + 写入 1 个</p>
+            <div>
+              <span>扩容后：n = 5，C = 8</span>
+              <div class="primer-slots">
+                <i>1</i>
+                <i>2</i>
+                <i>3</i>
+                <i>4</i>
+                <i class="new-slot">5</i>
+                <i class="empty-slot">·</i>
+                <i class="empty-slot">·</i>
+                <i class="empty-slot">·</i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cost-definition">
+          <strong>这里的“成本”不是钱，也不是秒数。</strong>
+          我们数基本操作：写入或复制一个元素各记 1
+          次。这样分析的是算法做了多少工作，不受机器快慢影响。
         </div>
         <div class="model-note">
           <strong>统一成本模型</strong>
@@ -67,7 +264,10 @@ import "../styles/course.css";
           <div class="lab-top">
             <div>
               <h3>动态数组 · 可执行模型</h3>
-              <p>蓝色是已有元素，深色是刚写入的元素；红框表示这一步搬过家。</p>
+              <p>
+                先运行到第 17
+                次，找出发生复制的步骤，再比较最大单次成本与累计成本。蓝色是已有元素，深色是新元素；红框表示本次复制。
+              </p>
             </div>
             <span id="append-step" class="step-label">
               第 0 次追加
@@ -183,12 +383,19 @@ import "../styles/course.css";
         <button class="complete" data-complete="1">
           我能区分：单次最坏与摊还上界
         </button>
+        <a class="lesson-next" href="#banker">
+          下一课：把已经算出的总账，分配到每一步
+        </a>
       </section>
-      <section id="banker" class="lesson">
+      <section id="banker" class="lesson" hidden>
         <div class="lesson-head">
           <p>第二课 / 记账法</p>
-          <h2>让便宜的操作，替昂贵的操作存钱。</h2>
+          <h2>记账法：建立每个前缀的余额不变量</h2>
         </div>
+        <p class="lesson-bridge">
+          第一课已把总成本压到 3m
+          以内。这一课换一个视角：如果每次只收固定预算，能不能付清所有真实开销？
+        </p>
         <p class="section-intro">
           沿用第一课的操作序列。每次追加收 3
           个信用点，实际用了多少就付多少。信用点只是证明工具，不是运行时间。
@@ -268,12 +475,18 @@ import "../styles/course.css";
         <button class="complete" data-complete="2">
           我能解释：余额非负为什么能证明总成本上界
         </button>
+        <a class="lesson-next" href="#potential">
+          下一课：把账户余额，变成一个状态函数
+        </a>
       </section>
-      <section id="potential" class="lesson">
+      <section id="potential" class="lesson" hidden>
         <div class="lesson-head">
           <p>第三课 / 势能法</p>
-          <h2>把未来的搬迁费，写进当前状态。</h2>
+          <h2>势能法：从状态变化推导总成本上界</h2>
         </div>
+        <p class="lesson-bridge">
+          第二课维护了一本余额不为负的账。现在不用保存全部历史，只根据元素数和容量计算“存下的预算”，并证明每步的预算变化都有界。
+        </p>
         <p class="section-intro">
           对这里从空数组出发、只追加且翻倍扩容的可达状态，选择 Φ(n,C) = 2n −
           C。初始 Φ = 0；之后 n &gt; C/2，所以 Φ ≥ 0。
@@ -377,12 +590,18 @@ import "../styles/course.css";
         <button class="complete" data-complete="3">
           我能从局部势能变化，写出望远镜求和
         </button>
+        <a class="lesson-next" href="#hysteresis">
+          下一课：加入删除，检验保证是否还成立
+        </a>
       </section>
-      <section id="hysteresis" class="lesson">
+      <section id="hysteresis" class="lesson" hidden>
         <div class="lesson-head">
           <p>第四课 / 扩缩容的滞回</p>
-          <h2>刚搬完家，又要搬回去？</h2>
+          <h2>扩缩容策略：检验并修复原有保证</h2>
         </div>
+        <p class="lesson-bridge">
+          前三课的保证只适用于追加。加入删除后，原来的势能可能变负；这节课先构造一种失败的设计，再看怎样留出积累预算的空间。
+        </p>
         <p class="section-intro">
           两种策略都在写满时翻倍扩容。区别在删除之后：使用率 ≤ 1/2
           就缩容，还是等到 ≤ 1/4？从 n = 9、C = 16 出发，交替删除、追加。
@@ -499,7 +718,7 @@ import "../styles/course.css";
           我能构造抖动序列，并解释 1/4 阈值的作用
         </button>
       </section>
-      <section class="closing">
+      <section class="closing" hidden>
         <h2>把“看起来不贵”，变成一个不等式。</h2>
         <div class="recap">
           <div>
@@ -547,7 +766,7 @@ import "../styles/course.css";
         </div>
       </section>
       <footer>
-        <span>一点一点 · 算法的数学</span>
+        <span>一点一点 · 数学方法</span>
         <a
           href="https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-2-data-structures-and-dynamic-arrays/"
           target="_blank"
@@ -562,7 +781,7 @@ import "../styles/course.css";
         >
           延伸：Cornell 势能法
         </a>
-        <a href="#main">回到实验</a>
+        <a href="#aggregate">回到第一课</a>
       </footer>
     </main>
   </body>
