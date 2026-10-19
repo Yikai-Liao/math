@@ -1,0 +1,412 @@
+---
+const matrixEntries = [
+  ["a", 1],
+  ["b", 1],
+  ["c", 0],
+  ["d", 1],
+];
+---
+
+<section
+  id="linear-map"
+  class="chapter lesson math-lesson"
+  data-course-view="linear-map"
+  aria-labelledby="lin-map-title"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <h2 id="lin-map-title">线性映射与面积</h2>
+    <p>
+      改变矩阵的两列，观察整个平面如何跟着变。先试剪切，再把两列调到同一直线。
+    </p>
+  </header>
+  <div class="lab">
+    <div class="lin-layout">
+      <figure>
+        <svg
+          id="lin-map-svg"
+          viewBox="0 0 520 400"
+          role="img"
+          aria-labelledby="lin-map-svg-title"
+        >
+          <title id="lin-map-svg-title">原始网格与变换后网格、单位正方形和向量</title>
+        </svg>
+        <figcaption>
+          虚线：原网格；实线：映射后的网格。浅色平行四边形是单位正方形的像；粗箭头标出
+          x 与 Ax。
+        </figcaption>
+      </figure>
+      <div>
+        <p class="formula">
+          A = [[a, b], [c, d]]
+          <br />
+          Ax = (ax₁ + bx₂, cx₁ + dx₂)
+        </p>
+        <div class="controls lin-control-grid">
+          {matrixEntries.map(([name, value]) => (
+            <label for={`lin-map-${name}`}>
+              {name} = <output id={`lin-map-${name}-out`}>{value}</output>
+              <input
+                id={`lin-map-${name}`}
+                type="range"
+                min="-2"
+                max="2"
+                step="0.25"
+                value={value}
+              />
+            </label>
+          ))}
+        </div>
+        <div class="controls">
+          <label for="lin-map-x">
+            x₁{" "}
+            <input
+              id="lin-map-x"
+              type="range"
+              min="-2"
+              max="2"
+              step="0.25"
+              value="1"
+            />
+          </label>
+          <label for="lin-map-y">
+            x₂{" "}
+            <input
+              id="lin-map-y"
+              type="range"
+              min="-2"
+              max="2"
+              step="0.25"
+              value="1"
+            />
+          </label>
+        </div>
+        <div class="controls">
+          <button id="lin-map-reset" type="button">
+            重置剪切
+          </button>
+          <button id="lin-map-collapse" type="button">
+            让平面压成一条线
+          </button>
+        </div>
+        <p id="lin-map-result" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+  <h3>两列决定整个映射</h3>
+  <p>
+    标准基 e₁ = (1,0)、e₂ = (0,1) 是坐标的两个单位方向。矩阵第一列是
+    Ae₁，第二列是 Ae₂。由线性性 A(αu + βv) = αAu + βAv，任意 x = x₁e₁ + x₂e₂
+    的像都由这两列组合出来。
+  </p>
+  <p>
+    行列式 det A = ad − bc 是有向面积的缩放倍数。面积乘以 |det
+    A|；负号表示定向翻转。det A = 0
+    时，两列线性相关，平面被压到直线或原点，映射不可逆。
+  </p>
+  <details class="details">
+    <summary>推导：为什么面积因子是 ad − bc？</summary>
+    <p>
+      有向面积对每条边线性，交换两条边时变号，同向边的面积为 0。把列向量写成 ae₁
+      + ce₂ 与 be₁ + de₂，展开面积：ab·0 + ad·1 + cb·(−1) + cd·0 = ad −
+      bc。这个结论适用于任意两条边，因此所有平行四边形都有同一面积因子。
+    </p>
+  </details>
+  <fieldset class="lin-exercise">
+    <legend>检验：A = [[1,2],[0,1]] 把面积扩大几倍？</legend>
+    <div class="controls">
+      <button type="button" data-lin-quiz="map" data-answer="2">
+        2 倍
+      </button>
+      <button type="button" data-lin-quiz="map" data-answer="1">
+        1 倍
+      </button>
+      <button type="button" data-lin-quiz="map" data-answer="0">
+        0 倍
+      </button>
+    </div>
+    <p id="lin-map-feedback" role="status">
+      先用行列式判断，再用剪切图解释。
+    </p>
+  </fieldset>
+  <p>
+    <a href="#linear-basis">继续：基与坐标</a>
+  </p>
+</section>
+
+<section
+  id="linear-basis"
+  class="chapter lesson math-lesson"
+  data-course-view="linear-basis"
+  aria-labelledby="lin-basis-title"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <h2 id="lin-basis-title">基与坐标</h2>
+    <p>
+      同一个向量 v = (1,1)，在不同基下要用多少份 b₁ 和
+      b₂？把第二个基向量逐渐压平，观察坐标的变化。
+    </p>
+  </header>
+  <div class="lab">
+    <div class="lin-layout">
+      <figure>
+        <svg
+          id="lin-basis-svg"
+          viewBox="0 0 520 400"
+          role="img"
+          aria-labelledby="lin-basis-svg-title"
+        >
+          <title id="lin-basis-svg-title">固定向量与两个候选基向量的线性组合</title>
+        </svg>
+        <figcaption>
+          b₁、b₂ 是候选基向量；虚线折线表示先走 αb₁，再走 βb₂，终点是固定的
+          v。坐标轴会随组合长度等比例缩放。
+        </figcaption>
+      </figure>
+      <div>
+        <p class="formula">
+          b₁ = (1,0)，b₂ = (s,h)
+          <br />v = αb₁ + βb₂ = (1,1)
+        </p>
+        <div class="controls">
+          <label for="lin-basis-s">
+            水平分量 s = <output id="lin-basis-s-out">1</output>
+            <input
+              id="lin-basis-s"
+              type="range"
+              min="-2"
+              max="2"
+              step="0.1"
+              value="1"
+            />
+          </label>
+          <label for="lin-basis-h">
+            竖直分量 h = <output id="lin-basis-h-out">1</output>
+            <input
+              id="lin-basis-h"
+              type="range"
+              min="-2"
+              max="2"
+              step="0.1"
+              value="1"
+            />
+          </label>
+        </div>
+        <div class="controls">
+          <button id="lin-basis-reset" type="button">
+            重置
+          </button>
+          <button id="lin-basis-singular" type="button">
+            设为 h = 0
+          </button>
+        </div>
+        <p id="lin-basis-result" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+  <h3>基保证坐标存在且唯一</h3>
+  <p>
+    ℝ²
+    的一组基是两个线性无关、张成整个平面的向量。张成指平面中任意向量都能由它们线性组合得到；线性无关指只有两个系数都为
+    0 时，组合才等于零向量，这保证每个向量的表示系数唯一。把它们并成矩阵 B = [b₁
+    b₂]，坐标列向量 [v]ᵦ = (α,β) 满足 B[v]ᵦ = v。当 det B ≠ 0 时，[v]ᵦ = B⁻¹v。
+  </p>
+  <details class="details">
+    <summary>推导：从方程读出坐标与奇异边界</summary>
+    <p>
+      这里 B = [[1,s],[0,h]]。第二行给出 hβ = 1；h ≠ 0 时 β = 1/h，再由 α + sβ =
+      1 得 α = 1 − s/h。当 h 接近 0，β 的绝对值增大。h = 0
+      时，任意组合的第二分量都是 0，v = (1,1) 无法表示；若目标是
+      (1,0)，则有无穷多组解 α + sβ = 1。此时这两个向量不构成基。
+    </p>
+  </details>
+  <fieldset class="lin-exercise">
+    <legend>检验：b₁ = (1,0)，b₂ = (1,2) 时，v = (1,1) 的坐标是多少？</legend>
+    <div class="controls">
+      <button type="button" data-lin-quiz="basis" data-answer="standard">
+        (1,1)
+      </button>
+      <button type="button" data-lin-quiz="basis" data-answer="half">
+        (½,½)
+      </button>
+      <button type="button" data-lin-quiz="basis" data-answer="double">
+        (0,2)
+      </button>
+    </div>
+    <p id="lin-basis-feedback" role="status">
+      把候选坐标代回 αb₁ + βb₂。
+    </p>
+  </fieldset>
+  <p>
+    <a href="#linear-eigen">继续：特征方向与迭代</a>
+  </p>
+</section>
+
+<section
+  id="linear-eigen"
+  class="chapter lesson math-lesson"
+  data-course-view="linear-eigen"
+  aria-labelledby="lin-eigen-title"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <h2 id="lin-eigen-title">特征方向与迭代</h2>
+    <p>
+      有些方向经过线性映射后仍在原来的直线上。逐次作用矩阵，观察不同方向的分量如何竞争。
+    </p>
+  </header>
+  <div class="lab">
+    <div class="lin-layout">
+      <figure>
+        <svg
+          id="lin-eigen-svg"
+          viewBox="0 0 520 400"
+          role="img"
+          aria-labelledby="lin-eigen-svg-title"
+        >
+          <title id="lin-eigen-svg-title">特征直线、初始单位向量与归一化迭代向量</title>
+        </svg>
+        <figcaption>
+          虚线：两条特征直线；灰箭头：初始单位向量；绿色箭头：当前单位向量。每一步都除以长度，图中不展示原始长度增长。
+        </figcaption>
+      </figure>
+      <div>
+        <p class="formula">
+          A = [[2,t],[t,2]]
+          <br />
+          q₊ = (1,1)/√2，λ₊ = 2+t
+          <br />
+          q₋ = (1,−1)/√2，λ₋ = 2−t
+        </p>
+        <div class="controls">
+          <label for="lin-eigen-t">
+            t = <output id="lin-eigen-t-out">1</output>
+            <input
+              id="lin-eigen-t"
+              type="range"
+              min="-3"
+              max="3"
+              step="0.25"
+              value="1"
+            />
+          </label>
+          <label for="lin-eigen-angle">
+            初始角度 θ = <output id="lin-eigen-angle-out">10</output>°
+            <input
+              id="lin-eigen-angle"
+              type="range"
+              min="0"
+              max="180"
+              step="5"
+              value="10"
+            />
+          </label>
+        </div>
+        <div class="controls">
+          <button id="lin-eigen-step" type="button">
+            作用一次并归一化
+          </button>
+          <button id="lin-eigen-reset" type="button">
+            回到初始向量
+          </button>
+        </div>
+        <p id="lin-eigen-result" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+  <h3>方向保留，伸缩由特征值决定</h3>
+  <p>
+    若非零向量 q 满足 Aq = λq，则 q 是特征向量，λ 是特征值。λ &gt; 0
+    时同向伸缩，λ &lt; 0 时反向伸缩，λ = 0 时压到原点。本例的 q₊、q₋ 相互正交；t
+    = 0 时 A = 2I，每个非零向量都是特征向量。
+  </p>
+  <details class="details">
+    <summary>推导：为什么多数初始方向会靠近一条特征直线？</summary>
+    <p>
+      直接相乘可验证 Aq₊ = (2+t)q₊、Aq₋ = (2−t)q₋。将 v₀ 展开为 c₊q₊ + c₋q₋，有
+      Aⁿv₀ = c₊λ₊ⁿq₊ +
+      c₋λ₋ⁿq₋。当两个特征值的绝对值不等，且初始向量在绝对值更大的特征方向上分量非零，另一个分量的相对大小按
+      |λ小/λ大|ⁿ 衰减。
+    </p>
+    <p>
+      实验使用 vₙ₊₁ = Avₙ / ‖Avₙ‖₂，其中 ‖(x,y)‖₂ = √(x²+y²)。若 Avₙ =
+      0，无法归一化，迭代停止。初始分量为 0 的方向不会凭空出现；例如 θ = 135°
+      精确落在 q₋ 的直线上。|t| &gt; 2
+      时有一个负特征值，可在对应特征直线上观察箭头逐步反向。
+    </p>
+  </details>
+  <fieldset class="lin-exercise">
+    <legend>检验：t = 1，v₀ = q₋。反复作用 A 后，方向会怎样？</legend>
+    <div class="controls">
+      <button type="button" data-lin-quiz="eigen" data-answer="plus">
+        逐渐转到 q₊
+      </button>
+      <button type="button" data-lin-quiz="eigen" data-answer="minus">
+        保持 q₋
+      </button>
+      <button type="button" data-lin-quiz="eigen" data-answer="zero">
+        变成零向量
+      </button>
+    </div>
+    <p id="lin-eigen-feedback" role="status">
+      检查 v₀ 在 q₊ 方向上是否有分量。
+    </p>
+  </fieldset>
+  <p>
+    <a href="#calculus-local">继续：微积分</a>
+  </p>
+</section>
+<script>
+  import "../scripts/linear.js";
+</script>
+<style>
+  .lin-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(230px, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .lin-layout figure {
+    margin: 0;
+    min-width: 0;
+  }
+  .lin-layout svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #f4f7f6;
+  }
+  .lin-layout figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .lin-control-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .lin-layout label {
+    display: block;
+    min-width: 0;
+  }
+  .lin-layout input {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+  }
+  .lin-exercise {
+    margin: 24px 0;
+    padding: 20px;
+    border: 1px solid #cbd5d1;
+  }
+  .lin-exercise legend {
+    padding: 0 6px;
+    font-weight: 600;
+  }
+  @media (max-width: 800px) {
+    .lin-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
