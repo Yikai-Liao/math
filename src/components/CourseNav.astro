@@ -1,0 +1,43 @@
+---
+import { units } from "../data/curriculum.js";
+---
+
+<nav>
+  <a href="#overview" data-course-link="overview" class="course-overview-link">
+    数学学习路线
+  </a>
+  {units.map((unit) => (
+    <details
+      class="subject-nav"
+      data-directory={unit.id}
+      open={unit.id === "linear"}
+    >
+      <summary>
+        {unit.name}
+        {unit.id === "algorithm" && <small>选学</small>}
+      </summary>
+      <div class="subject-nav-inner">
+        <span class="nav-domain-note">{unit.description}</span>
+        <div class="topic-lessons">
+          {unit.lessons.map(([id, name, description], index) => (
+            <a href={`#${id}`} data-course-link={id}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                {name}
+                <small>{description}</small>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </details>
+  ))}
+  <details class="subject-nav planned-nav" data-directory="future">
+    <summary>后续方向 · 待制作</summary>
+    <div class="nav-future">
+      <p>组合计数与证明</p>
+      <p>递推与渐近分析</p>
+      <p>数值分析与误差</p>
+    </div>
+  </details>
+</nav>

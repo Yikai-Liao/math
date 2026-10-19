@@ -1,5 +1,10 @@
 ---
 import "../styles/course.css";
+import "../styles/mathematics.css";
+import CourseNav from "../components/CourseNav.astro";
+import LinearLessons from "../components/LinearLessons.astro";
+import CalculusLessons from "../components/CalculusLessons.astro";
+import ProbabilityLessons from "../components/ProbabilityLessons.astro";
 ---
 
 <!doctype html>
@@ -10,9 +15,9 @@ import "../styles/course.css";
     <meta name="theme-color" content="#f6f8fb" />
     <meta
       name="description"
-      content="算法分析中的摊还分析专题：明确学科位置、先修知识与学习路线，用动态数组案例学习聚合分析、记账法、势能法与扩缩容策略。"
+      content="本科数学互动课程：通过线性代数、微积分和概率论的九个实验，理解定义、推导结论并练习证明。算法分析作为选学应用。"
     />
-    <title>算法分析 · 摊还分析专题｜一点一点</title>
+    <title>线性代数、微积分与概率论｜一点一点</title>
 
     <script>
       import "../scripts/course.js";
@@ -38,73 +43,11 @@ import "../styles/course.css";
     </header>
     <aside class="course-sidebar" aria-label="课程目录">
       <div class="sidebar-heading">学习路线</div>
-      <nav>
-        <a
-          href="#overview"
-          data-course-link="overview"
-          class="course-overview-link"
-        >
-          数学学习路线
-        </a>
-        <details class="subject-nav" open>
-          <summary>算法分析</summary>
-          <div class="subject-nav-inner">
-            <span class="nav-domain-note">时间复杂度 · 操作序列的成本</span>
-            <details class="topic-nav" open>
-              <summary>
-                摊还分析 <small>已开放</small>
-              </summary>
-              <div class="topic-lessons">
-                <a href="#aggregate" data-course-link="aggregate">
-                  <span>01</span>
-                  <div>
-                    聚合分析<small>求出一串操作的总成本</small>
-                  </div>
-                </a>
-                <a href="#banker" data-course-link="banker">
-                  <span>02</span>
-                  <div>
-                    记账法<small>建立前缀余额不变量</small>
-                  </div>
-                </a>
-                <a href="#potential" data-course-link="potential">
-                  <span>03</span>
-                  <div>
-                    势能法<small>用状态函数证明上界</small>
-                  </div>
-                </a>
-                <a href="#hysteresis" data-course-link="hysteresis">
-                  <span>04</span>
-                  <div>
-                    应用：扩缩容<small>检验分析的适用条件</small>
-                  </div>
-                </a>
-              </div>
-            </details>
-          </div>
-        </details>
-        <details class="subject-nav planned-nav">
-          <summary>基础与后续方向</summary>
-          <div class="nav-future">
-            <p>
-              离散数学：计数与证明<small>待制作</small>
-            </p>
-            <p>
-              求和、递推与渐近分析<small>待制作</small>
-            </p>
-            <p>
-              概率与期望<small>待制作</small>
-            </p>
-            <p>
-              数值分析<small>独立方向 · 待制作</small>
-            </p>
-          </div>
-        </details>
-      </nav>
+      <CourseNav />
       <p class="sidebar-note">
         先理解模型，再操作、推导和检验。
         <br />
-        本专题 4 课，按自己的节奏学习。
+        数学主线 9 课，算法应用 4 课。
       </p>
     </aside>
     <dialog
@@ -118,69 +61,7 @@ import "../styles/course.css";
           关闭
         </button>
       </div>
-      <nav>
-        <a
-          href="#overview"
-          data-course-link="overview"
-          class="course-overview-link"
-        >
-          数学学习路线
-        </a>
-        <details class="subject-nav" open>
-          <summary>算法分析</summary>
-          <div class="subject-nav-inner">
-            <span class="nav-domain-note">时间复杂度 · 操作序列的成本</span>
-            <details class="topic-nav" open>
-              <summary>
-                摊还分析 <small>已开放</small>
-              </summary>
-              <div class="topic-lessons">
-                <a href="#aggregate" data-course-link="aggregate">
-                  <span>01</span>
-                  <div>
-                    聚合分析<small>求出一串操作的总成本</small>
-                  </div>
-                </a>
-                <a href="#banker" data-course-link="banker">
-                  <span>02</span>
-                  <div>
-                    记账法<small>建立前缀余额不变量</small>
-                  </div>
-                </a>
-                <a href="#potential" data-course-link="potential">
-                  <span>03</span>
-                  <div>
-                    势能法<small>用状态函数证明上界</small>
-                  </div>
-                </a>
-                <a href="#hysteresis" data-course-link="hysteresis">
-                  <span>04</span>
-                  <div>
-                    应用：扩缩容<small>检验分析的适用条件</small>
-                  </div>
-                </a>
-              </div>
-            </details>
-          </div>
-        </details>
-        <details class="subject-nav planned-nav">
-          <summary>基础与后续方向</summary>
-          <div class="nav-future">
-            <p>
-              离散数学：计数与证明<small>待制作</small>
-            </p>
-            <p>
-              求和、递推与渐近分析<small>待制作</small>
-            </p>
-            <p>
-              概率与期望<small>待制作</small>
-            </p>
-            <p>
-              数值分析<small>独立方向 · 待制作</small>
-            </p>
-          </div>
-        </details>
-      </nav>
+      <CourseNav />
     </dialog>
     <main id="main" class="wrap course-main">
       <nav
@@ -191,119 +72,60 @@ import "../styles/course.css";
         <span>数学学习路线</span>
       </nav>
       <section id="overview" class="opening">
-        <p class="unit-label">本科数学学习 · 主题地图</p>
-        <h1>数学学习路线</h1>
+        <p class="unit-label">本科数学 · 互动复习</p>
+        <h1>线性代数、微积分与概率论</h1>
         <p class="intro">
-          当前已开放的是<strong>算法分析中的摊还分析专题</strong>
-          。下面先标出它的位置和前置知识；其他主题尚未制作。
+          从向量与变换，到连续变化，再到随机变量。每课先操作数学对象，再用定义和推导解释观察到的规律，最后完成一道带解析的练习。
         </p>
-        <ol class="subject-roadmap" aria-label="建议复习与学习路线">
-          <li>
-            <span class="route-status">01 · 前置基础 · 待制作</span>
-            <h2>离散数学：计数与证明</h2>
-            <p>
-              计数方法、归纳法、不变量。学习怎样组织覆盖题目假设范围内所有情况的论证。
-            </p>
-          </li>
-          <li>
-            <span class="route-status">02 · 分析工具 · 待制作</span>
-            <h2>求和、递推与渐近分析</h2>
-            <p>把重复过程写成求和或递推式，用 O、Θ 等记号描述增长速度。</p>
-          </li>
+        <ol class="subject-roadmap" aria-label="数学课程路线">
           <li class="current-topic">
-            <span class="route-status">03 · 你在这里 · 已开放</span>
-            <h2>算法分析：摊还分析</h2>
+            <span class="route-status">01 · 线性代数 · 三课</span>
+            <h2>用线性结构理解空间</h2>
             <p>
-              研究整串操作的总成本。聚合分析、记账法、势能法是三种证明方法。
+              矩阵怎样改变向量？换一组基，坐标怎样变化？哪些方向在变换后保持不变？
             </p>
-            <a href="#aggregate">进入专题第一课</a>
+            <p class="caption">先修：向量坐标、二元一次方程。</p>
+            <a href="#linear-map">开始：线性变换与矩阵</a>
           </li>
           <li>
-            <span class="route-status">04 · 后续拓展 · 待制作</span>
-            <h2>概率与期望</h2>
-            <p>
-              在明确概率模型后研究随机过程与期望成本。与本专题不依赖概率的分析相区分。
-            </p>
+            <span class="route-status">02 · 微积分 · 三课</span>
+            <h2>从局部变化推导整体累积</h2>
+            <p>用导数建立线性近似，用梯度计算方向变化率，用黎曼和定义积分。</p>
+            <p class="caption">先修：函数与极限；梯度课使用向量和点积。</p>
+            <a href="#calculus-local">开始：导数与局部线性近似</a>
+          </li>
+          <li>
+            <span class="route-status">03 · 概率论 · 三课</span>
+            <h2>用分布描述随机量</h2>
+            <p>从样本空间构造随机变量，计算期望与方差，检验相关性和独立性。</p>
+            <p class="caption">先修：有限求和与基本概率；本组研究离散分布。</p>
+            <a href="#probability-distribution">开始：随机变量与分布</a>
           </li>
         </ol>
-        <p class="route-caveat">
-          按下面列出的先修知识选择起点；熟悉基本代数、等比求和与渐近记号，就可以进入当前专题。
-          <strong>数值分析</strong>
-          研究近似、误差与稳定性，作为独立的后续方向。
-        </p>
-        <div class="topic-position">
-          <h2>当前专题放在哪里？</h2>
-          <p class="classification">
-            算法分析 <span>›</span> 时间复杂度 <span>›</span> 操作序列的成本{" "}
-            <span>›</span> <strong>摊还分析</strong>
-          </p>
-          <div class="topic-distinction">
-            <p>
-              <strong>研究方法：摊还分析</strong>
-              <br />
-              证明一串操作的总成本上界。
-            </p>
-            <p>
-              <strong>本次案例：动态数组</strong>
-              <br />
-              一种数据结构，提供可观察、可计算的操作序列。
-            </p>
-          </div>
-          <p class="caption">
-            聚合分析、记账法和势能法是三种并列的分析方法，课程按理解顺序展开；第四课是应用。势能是用来记录剩余分析预算的状态函数。
-          </p>
-        </div>
-        <h2 class="topic-title">摊还分析：计算连续追加的总操作次数</h2>
-        <div class="overview-purpose">
-          <h3>要解决的问题</h3>
-          <p>
-            动态数组有空位时，追加只需写入一次；容量用尽时，追加需要复制全部旧元素再写入新元素。
-            <strong>摊还分析</strong>
-            把整段操作的总成本分配到每一步，给出每次操作的摊还上界。
-          </p>
-          <p>
-            学完后，你应能证明从空数组开始、翻倍扩容的 m 次追加总成本为
-            O(m)，并用反例解释为什么“半满就缩容”会破坏这个保证。
-          </p>
-        </div>
-        <div class="learning-path" aria-label="本专题的四步推导路线">
-          <a href="#aggregate">
-            <b>先求总和</b>
-            <span>数清写入与复制</span>
-          </a>
-          <a href="#banker">
-            <b>再分配预算</b>
-            <span>每步收费，不能透支</span>
-          </a>
-          <a href="#potential">
-            <b>把预算写成证明</b>
-            <span>用状态函数代替整本账</span>
-          </a>
-          <a href="#hysteresis">
-            <b>最后检验设计</b>
-            <span>让扩容与缩容保持距离</span>
-          </a>
-        </div>
         <div class="prerequisite-box">
-          <h3>进入前，需要会什么？</h3>
-          <ul>
-            <li>基本代数与有限求和，尤其是等比数列求和。</li>
-            <li>理解 O(m) 是增长上界，Θ(m) 表示同阶增长。</li>
-            <li>能跟随一个不变量或逐步推导。</li>
-          </ul>
+          <h2>怎样选择起点？</h2>
           <p>
-            本专题会从动态数组的追加过程介绍摊还分析；递推式与概率论留在后续主题中学习。
+            建议按上面的顺序复习。线性代数中的向量会在梯度课再次出现；梯度课会简要回顾点积；概率论这三课只用有限求和，可以独立开始。每组都从具体例子进入本科定义与推导。
+          </p>
+          <p>
+            实验展示有限个参数下的结果；课内推导负责说明结论在哪些条件下普遍成立。改变参数、预测结果，再核对公式。
           </p>
         </div>
-        <div class="course-meta">
-          <span>需要：求和、基本代数、O 记号</span>
-          <span>保证覆盖任意追加序列</span>
-          <span>前三课分析追加；第四课加入删除与缩容</span>
-        </div>
-        <a class="overview-start" href="#aggregate">
-          进入第一课：先看动态数组怎样工作
-        </a>
+        <details class="optional-application">
+          <summary>选学应用：算法分析中的摊还分析</summary>
+          <p>
+            已有四课保留在这里。以动态数组为例，学习聚合分析、记账法、势能法与扩缩容策略。需要等比求和和
+            O／Θ 记号。
+          </p>
+          <a href="#aggregate">进入算法分析专题</a>
+        </details>
+        <p class="route-caveat">
+          后续方向：组合计数与证明、递推与渐近分析、数值误差。以上方向尚未制作；当前目录中的九节数学课和四节选学课均可操作。
+        </p>
       </section>
+      <LinearLessons />
+      <CalculusLessons />
+      <ProbabilityLessons />
       <section id="aggregate" class="lesson" hidden>
         <div class="lesson-head">
           <p>第一课 / 聚合分析</p>
@@ -893,22 +715,11 @@ import "../styles/course.css";
         </div>
       </section>
       <footer>
-        <span>一点一点 · 数学方法</span>
-        <a
-          href="https://www.ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/resources/lecture-2-data-structures-and-dynamic-arrays/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          延伸：MIT 动态数组
-        </a>
-        <a
-          href="https://www.cs.cornell.edu/courses/cs3110/2012fa/recitations/rec24.html"
-          target="_blank"
-          rel="noreferrer"
-        >
-          延伸：Cornell 势能法
-        </a>
-        <a href="#aggregate">回到第一课</a>
+        <span>一点一点 · 本科数学互动课程</span>
+        <a href="#overview">返回学习路线</a>
+        <a href="#linear-map">线性代数</a>
+        <a href="#calculus-local">微积分</a>
+        <a href="#probability-distribution">概率论</a>
       </footer>
     </main>
   </body>

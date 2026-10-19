@@ -7,7 +7,7 @@
     "dev": "astro dev --host 0.0.0.0",
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0",
-    "check:js": "node --check src/scripts/course.js"
+    "check:js": "node --check src/scripts/course.js && node --check src/scripts/linear.js && node --check src/scripts/calculus.js && node --check src/scripts/probability.js"
   },
   "dependencies": {
     "astro": "^6.0.0"

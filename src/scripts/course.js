@@ -1,4 +1,5 @@
 "use strict";
+import { units } from "../data/curriculum.js";
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const shuffle = (items) =>
@@ -524,26 +525,21 @@ courseMenu.addEventListener("click", (event) => {
 });
 const courseSectionIds = [
   "overview",
-  "aggregate",
-  "banker",
-  "potential",
-  "hysteresis",
+  ...units.flatMap((unit) => unit.lessons.map((lesson) => lesson[0])),
 ];
 function showCourseView() {
   const requested = window.location.hash.slice(1);
   const active = courseSectionIds.includes(requested) ? requested : "overview";
   stopAppend();
   stopResize();
-  const lessonNames = {
-    aggregate: "聚合分析",
-    banker: "记账法",
-    potential: "势能法",
-    hysteresis: "扩缩容策略",
-  };
+  const unit = units.find((unit) =>
+    unit.lessons.some((lesson) => lesson[0] === active),
+  );
+  const lesson = unit?.lessons.find((lesson) => lesson[0] === active);
   document.querySelector("#course-breadcrumbs").innerHTML =
     active === "overview"
       ? "<span>数学学习路线</span>"
-      : `<a href="#overview">学习路线</a><span aria-hidden="true">›</span><span>算法分析</span><span aria-hidden="true">›</span><span>时间复杂度</span><span aria-hidden="true">›</span><span>摊还分析</span><span aria-hidden="true">›</span><strong>${lessonNames[active]}</strong>`;
+      : `<a href="#overview">学习路线</a><span aria-hidden="true">›</span><span>${unit.name}</span><span aria-hidden="true">›</span><strong>${lesson[1]}</strong>`;
   courseSectionIds.forEach((id) => {
     document.getElementById(id).hidden = id !== active;
   });
@@ -577,19 +573,18 @@ window.addEventListener("resize", () => {
 });
 showCourseView();
 
-const pairedDirectoryGroups = [
-  ".subject-nav:not(.planned-nav)",
-  ".topic-nav",
-  ".planned-nav",
-];
-pairedDirectoryGroups.forEach((selector) => {
-  const groups = [...document.querySelectorAll(selector)];
-  groups.forEach((group) =>
-    group.addEventListener("toggle", () => {
-      groups.forEach((other) => {
-        if (other !== group && other.open !== group.open)
-          other.open = group.open;
-      });
-    }),
-  );
-});
+// 同一学科的桌面目录与手机目录同步，其他学科保持独立。
+units
+  .map((unit) => unit.id)
+  .concat("future")
+  .forEach((id) => {
+    const groups = [...document.querySelectorAll(`[data-directory="${id}"]`)];
+    groups.forEach((group) =>
+      group.addEventListener("toggle", () => {
+        groups.forEach((other) => {
+          if (other !== group && other.open !== group.open)
+            other.open = group.open;
+        });
+      }),
+    );
+  });
