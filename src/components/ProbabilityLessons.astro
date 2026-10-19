@@ -1,0 +1,629 @@
+---
+const outcomes = ["反反", "反正", "正反", "正正"];
+---
+
+<section
+  class="chapter math-lesson lesson"
+  data-course-view="probability-distribution"
+  id="probability-distribution"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="prob-kicker">概率论 · 第一课</p>
+    <h1>离散随机变量与分布</h1>
+    <p>随机变量 X 给每个试验结果赋一个数；分布记录每个数出现的概率。</p>
+  </header>
+  <div class="lab prob-lab">
+    <h2>两次抛掷，记录正面个数</h2>
+    <p>
+      两次独立抛掷同一枚硬币，每次正面的概率为 p。先预测：p
+      增大时，哪个取值的概率会持续增大？
+    </p>
+    <div class="controls prob-controls">
+      <label for="prob-p">
+        正面概率 p = <output id="prob-p-value">0.50</output>
+        <input id="prob-p" type="range" min="0" max="100" step="5" value="50" />
+      </label>
+      <button type="button" id="prob-distribution-reset">
+        重置 p = 0.50
+      </button>
+    </div>
+    <div
+      class="prob-map-scroll"
+      tabindex="0"
+      role="region"
+      aria-label="结果到概率的映射图，可横向滚动"
+    >
+      <svg
+        id="prob-map"
+        viewBox="0 0 660 260"
+        role="img"
+        aria-labelledby="prob-map-title"
+      >
+        <title id="prob-map-title">试验结果通过正面个数映射到零、一、二，再合并概率</title>
+        <text x="24" y="24">
+          试验结果 ω
+        </text>
+        <text x="275" y="24">
+          X(ω)：正面个数
+        </text>
+        <text x="480" y="24">
+          概率质量 P(X=x)
+        </text>
+        {outcomes.map((outcome, i) => (
+          <g>
+            <path
+              d={`M 160 ${65 + i * 52} L 300 ${65 + (i === 0 ? 0 : i === 3 ? 2 : 1) * 78}`}
+              class="prob-edge"
+            />
+            <text x="24" y={66 + i * 52}>
+              {outcome}
+            </text>
+            <text id={`prob-outcome-${i}`} x="95" y={66 + i * 52}>
+              0.25
+            </text>
+          </g>
+        ))}
+        {[0, 1, 2].map((x) => (
+          <g>
+            <circle cx="330" cy={65 + x * 78} r="23" class="prob-node" />
+            <text x="330" y={71 + x * 78} text-anchor="middle">
+              {x}
+            </text>
+            <path d={`M 354 ${65 + x * 78} H 470`} class="prob-edge" />
+            <text id={`prob-mass-${x}`} x="486" y={71 + x * 78}>
+              0.00
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+    <p
+      id="prob-distribution-reading"
+      class="prob-reading"
+      aria-live="polite"
+    ></p>
+  </div>
+  <div class="prob-columns">
+    <div>
+      <h2>从结果到分布</h2>
+      <p>
+        样本空间 Ω = ｛反反，反正，正反，正正｝。映射 X: Ω → ℝ
+        把这四个结果分别变成 0、1、1、2。
+      </p>
+      <p>事件 ｛X=1｝ 包含“反正”和“正反”。它们互斥，所以概率相加。</p>
+      <div class="formula">
+        P(X=0)=(1−p)²
+        <br />
+        P(X=1)=2p(1−p)
+        <br />
+        P(X=2)=p²
+      </div>
+    </div>
+    <div>
+      <h2>分布必须满足什么？</h2>
+      <p>
+        概率质量函数 p<sub>X</sub>(x)=P(X=x) 给出每个可能取值的概率。
+      </p>
+      <div class="formula">
+        p<sub>X</sub>(x) ≥ 0，∑<sub>x</sub> p<sub>X</sub>(x)=1
+      </div>
+      <p>
+        这里的和为 (1−p)² + 2p(1−p) + p² =
+        1。独立性用于计算每个两次抛掷结果的概率；互斥性用于合并不同结果的概率。
+      </p>
+    </div>
+  </div>
+  <form class="prob-exercise" data-prob-exercise="distribution">
+    <h2>检验理解</h2>
+    <label for="prob-distribution-answer">当 p=1/2 时，P(X=1) 是多少？</label>
+    <select id="prob-distribution-answer" name="answer">
+      <option value="">请选择</option>
+      <option value="quarter">1/4</option>
+      <option value="half">1/2</option>
+      <option value="third">1/3</option>
+    </select>
+    <button type="submit">检查推理</button>
+    <p class="prob-feedback" aria-live="polite">
+      提示：列出映射到 1 的所有试验结果。
+    </p>
+  </form>
+  <a class="prob-next" href="#probability-expectation">
+    下一课：期望与线性性 →
+  </a>
+</section>
+
+<section
+  class="chapter math-lesson lesson"
+  data-course-view="probability-expectation"
+  id="probability-expectation"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="prob-kicker">概率论 · 第二课</p>
+    <h1>期望与线性性</h1>
+    <p>
+      期望 E[X] 是各个取值按概率加权的和。有限离散情形下，E[X]=∑<sub>x</sub>{" "}
+      xP(X=x)。
+    </p>
+  </header>
+  <div class="lab prob-lab">
+    <h2>改变依赖关系，观察和的期望</h2>
+    <p>
+      X、Y 都只取 0 或 1，且
+      P(X=1)=P(Y=1)=1/2。联合分布给出它们同时取各个值的概率。令 q=P(X=1,Y=1)，记
+      S=X+Y。
+    </p>
+    <div class="controls prob-controls">
+      <label for="prob-expect-q">
+        同时为 1 的概率 q = <output id="prob-expect-q-value">0.25</output>
+        <input
+          id="prob-expect-q"
+          type="range"
+          min="0"
+          max="50"
+          step="5"
+          value="25"
+        />
+      </label>
+      <button type="button" id="prob-expect-reset">
+        重置 q = 0.25
+      </button>
+    </div>
+    <div class="prob-columns">
+      <div class="prob-table-wrap">
+        <table>
+          <caption>联合分布 P(X=x,Y=y)</caption>
+          <thead>
+            <tr>
+              <th scope="col">X ＼ Y</th>
+              <th scope="col">Y=0</th>
+              <th scope="col">Y=1</th>
+              <th scope="col">行合计</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">X=0</th>
+              <td id="prob-joint-00">0.25</td>
+              <td id="prob-joint-01">0.25</td>
+              <td>0.50</td>
+            </tr>
+            <tr>
+              <th scope="row">X=1</th>
+              <td id="prob-joint-10">0.25</td>
+              <td id="prob-joint-11">0.25</td>
+              <td>0.50</td>
+            </tr>
+            <tr>
+              <th scope="row">列合计</th>
+              <td>0.50</td>
+              <td>0.50</td>
+              <td>1.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>对角两格为 q，另两格为 1/2−q；非负性要求 0≤q≤1/2。</p>
+      </div>
+      <div>
+        <svg
+          id="prob-expect-plot"
+          viewBox="0 0 440 230"
+          role="img"
+          aria-labelledby="prob-expect-title"
+        >
+          <title id="prob-expect-title">X、Y 与 X 加 Y 的期望，随 q 变化保持不变</title>
+          <path d="M55 30V190H410" class="prob-edge" />
+          <text x="20" y="194">
+            0
+          </text>
+          <text x="15" y="114">
+            0.5
+          </text>
+          <text x="20" y="34">
+            1
+          </text>
+          <path d="M55 110H410 M55 30H410" class="prob-grid" />
+          <rect x="90" y="110" width="65" height="80" class="prob-bar" />
+          <rect x="210" y="110" width="65" height="80" class="prob-bar" />
+          <rect x="330" y="30" width="65" height="160" class="prob-bar" />
+          <text x="122" y="214" text-anchor="middle">
+            E[X]
+          </text>
+          <text x="242" y="214" text-anchor="middle">
+            E[Y]
+          </text>
+          <text x="362" y="214" text-anchor="middle">
+            E[X+Y]
+          </text>
+          <text x="122" y="100" text-anchor="middle">
+            0.5
+          </text>
+          <text x="242" y="100" text-anchor="middle">
+            0.5
+          </text>
+          <text x="362" y="23" text-anchor="middle">
+            1
+          </text>
+        </svg>
+      </div>
+    </div>
+    <p id="prob-expect-reading" class="prob-reading" aria-live="polite"></p>
+    <div id="prob-expect-calculation" class="formula"></div>
+  </div>
+  <h2>线性性：把联合求和拆开</h2>
+  <p>记 p(x,y)=P(X=x,Y=y)。对任意有限离散随机变量 X、Y 和常数 a、b：</p>
+  <div class="formula">
+    E[aX+bY] = ∑<sub>x,y</sub>(ax+by)p(x,y)
+    <br />= a∑<sub>x</sub>x∑<sub>y</sub>p(x,y) + b∑<sub>y</sub>y∑<sub>x</sub>
+    p(x,y)
+    <br />= aE[X] + bE[Y]
+  </div>
+  <p>
+    内层求和得到边缘分布，如 ∑<sub>y</sub>
+    p(x,y)=P(X=x)。这一步没有要求独立。对一般随机变量，期望存在且绝对可积时也成立。
+  </p>
+  <details>
+    <summary>为什么期望可以不是可能取值？</summary>
+    <p>
+      单次公平硬币的正面指示变量只取 0 或 1，却有
+      E[X]=0×1/2+1×1/2=1/2。期望是分布的加权中心；它不必是某次试验的结果。
+    </p>
+  </details>
+  <form class="prob-exercise" data-prob-exercise="expectation">
+    <h2>检验理解</h2>
+    <label for="prob-expectation-answer">
+      在本例的任意 q 下，E[3X−2Y+4] 等于多少？
+    </label>
+    <select id="prob-expectation-answer" name="answer">
+      <option value="">请选择</option>
+      <option value="depends">依赖 q，无法确定</option>
+      <option value="fourhalf">4.5</option>
+      <option value="five">5</option>
+    </select>
+    <button type="submit">检查推理</button>
+    <p class="prob-feedback" aria-live="polite">
+      提示：分别对 3X、−2Y 和常数 4 取期望。
+    </p>
+  </form>
+  <a class="prob-next" href="#probability-variance">
+    下一课：方差与协方差 →
+  </a>
+</section>
+
+<section
+  class="chapter math-lesson lesson"
+  data-course-view="probability-variance"
+  id="probability-variance"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="prob-kicker">概率论 · 第三课</p>
+    <h1>方差、协方差与独立性</h1>
+    <p>方差 Var(X)=E[(X−E[X])²]，衡量取值偏离期望的平方距离的加权平均。</p>
+  </header>
+  <div class="lab prob-lab">
+    <h2>期望固定为 1，离散程度如何变化？</h2>
+    <p>
+      沿用 P(X=1)=P(Y=1)=1/2
+      的联合分布：P(0,0)=P(1,1)=q，P(0,1)=P(1,0)=1/2−q。令 S=X+Y。
+    </p>
+    <div class="controls prob-controls">
+      <label for="prob-var-q">
+        同时为 1 的概率 q = <output id="prob-var-q-value">0.25</output>
+        <input
+          id="prob-var-q"
+          type="range"
+          min="0"
+          max="50"
+          step="5"
+          value="25"
+        />
+      </label>
+      <button type="button" id="prob-var-reset">
+        重置 q = 0.25
+      </button>
+    </div>
+    <svg
+      id="prob-var-plot"
+      viewBox="0 0 620 250"
+      role="img"
+      aria-labelledby="prob-var-title"
+    >
+      <title id="prob-var-title">S 等于零、一、二的概率，以及固定期望一</title>
+      <path d="M60 25V205H580" class="prob-edge" />
+      <path d="M60 25H580 M60 115H580" class="prob-grid" />
+      <text x="22" y="30">
+        1
+      </text>
+      <text x="12" y="120">
+        0.5
+      </text>
+      <text x="22" y="210">
+        0
+      </text>
+      {[0, 1, 2].map((x) => (
+        <g>
+          <rect
+            id={`prob-var-bar-${x}`}
+            x={120 + x * 170}
+            y="160"
+            width="65"
+            height="45"
+            class="prob-bar"
+          />
+          <text
+            id={`prob-var-label-${x}`}
+            x={152 + x * 170}
+            y="150"
+            text-anchor="middle"
+          >
+            0.25
+          </text>
+          <text x={152 + x * 170} y="232" text-anchor="middle">
+            S={x}
+          </text>
+        </g>
+      ))}
+      <text x="615" y="232" text-anchor="end">
+        取值
+      </text>
+    </svg>
+    <p id="prob-var-reading" class="prob-reading" aria-live="polite"></p>
+    <div id="prob-var-calculation" class="formula"></div>
+  </div>
+  <div class="prob-columns">
+    <div>
+      <h2>平方展开得到方差公式</h2>
+      <div class="formula">Var(X)=E[X²]−(E[X])²</div>
+      <p>
+        令 μ=E[X]。展开 (X−μ)² 后取期望：E[X²]−2μE[X]+μ²=E[X²]−μ²。本例
+        X²=X，所以 Var(X)=1/2−1/4=1/4，Y 也一样。
+      </p>
+      <h2>协方差：共同偏离的方向</h2>
+      <div class="formula">
+        Cov(X,Y)=E[(X−E[X])(Y−E[Y])]
+        <br />
+        =E[XY]−E[X]E[Y]
+      </div>
+      <p>本例 XY 仅在二者同时为 1 时等于 1，因此 E[XY]=q，Cov(X,Y)=q−1/4。</p>
+    </div>
+    <div>
+      <h2>和的方差为什么有交叉项？</h2>
+      <p>将 S−E[S]=(X−E[X])+(Y−E[Y]) 平方，再取期望：</p>
+      <div class="formula">
+        Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y)
+        <br />
+        =1/4+1/4+2(q−1/4)=2q
+      </div>
+      <p>
+        独立时联合概率分解为边缘概率的乘积，E[XY]=E[X]E[Y]，故协方差为
+        0。本例独立当且仅当 q=1/4，此时和的方差等于
+        1/2。以上公式要求二阶矩有限，即 E[X²] 与 E[Y²] 均有限。
+      </p>
+    </div>
+  </div>
+  <details>
+    <summary>协方差为 0，一定独立吗？</summary>
+    <p>
+      一般不成立。令 U 在 −1、0、1 上等概率取值，V=U²。E[U]=E[UV]=0，所以
+      Cov(U,V)=0。但知道 V=0 就能确定 U=0：P(U=0,V=0)=1/3，而
+      P(U=0)P(V=0)=1/9，因此不独立。
+    </p>
+  </details>
+  <form class="prob-exercise" data-prob-exercise="variance">
+    <h2>检验理解</h2>
+    <label for="prob-variance-answer">q=0 时，Var(X+Y) 为什么等于 0？</label>
+    <select id="prob-variance-answer" name="answer">
+      <option value="">请选择</option>
+      <option value="constant">X+Y 恒等于 1，交叉项恰好抵消两项方差</option>
+      <option value="independent">X 与 Y 独立，所以方差为 0</option>
+      <option value="zero">X、Y 各自的方差都为 0</option>
+    </select>
+    <button type="submit">检查推理</button>
+    <p class="prob-feedback" aria-live="polite">
+      提示：q=0 时，联合分布中哪些结果还有正概率？
+    </p>
+  </form>
+  <a class="prob-next" href="#overview">
+    返回数学学习路线 →
+  </a>
+</section>
+<script>
+  import "../scripts/probability.js";
+</script>
+<style>
+  .prob-map-scroll {
+    overflow-x: auto;
+  }
+  .prob-map-scroll svg {
+    min-width: 560px;
+  }
+  .prob-next {
+    display: inline-block;
+    margin-top: 24px;
+    min-height: 44px;
+    padding-block: 10px;
+  }
+  .prob-kicker {
+    font-size: 0.83rem;
+    color: #596571;
+    margin-bottom: 8px;
+  }
+  .prob-lab {
+    margin-block: 24px;
+  }
+  .prob-lab > h2 {
+    margin-top: 0;
+  }
+  .prob-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-block: 18px;
+  }
+  .prob-controls label {
+    display: grid;
+    gap: 8px;
+    flex: 1;
+    min-width: 210px;
+    max-width: 460px;
+  }
+  .prob-controls input {
+    width: 100%;
+    min-height: 32px;
+    accent-color: #16786f;
+  }
+  .prob-controls button,
+  .prob-exercise button,
+  .prob-exercise select {
+    min-height: 44px;
+    padding: 8px 13px;
+    border: 1px solid #c6ccd1;
+    border-radius: 6px;
+    background: #fff;
+    color: #25313a;
+    font: inherit;
+  }
+  .prob-exercise button {
+    background: #263239;
+    color: #fff;
+  }
+  .prob-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .prob-columns > * {
+    min-width: 0;
+  }
+  .prob-lab svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    overflow: visible;
+  }
+  .prob-lab svg text {
+    font-family: inherit;
+    font-size: 15px;
+    fill: #263640;
+  }
+  .prob-edge {
+    stroke: #849198;
+    stroke-width: 1.4;
+    fill: none;
+  }
+  .prob-grid {
+    stroke: #dfe5e7;
+    stroke-width: 1;
+    fill: none;
+  }
+  .prob-node {
+    fill: #edf7f5;
+    stroke: #16786f;
+    stroke-width: 1.5;
+  }
+  .prob-bar {
+    fill: #16786f;
+  }
+  .prob-reading {
+    font-weight: 600;
+    min-height: 1.7em;
+  }
+  .prob-table-wrap {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  caption {
+    text-align: left;
+    padding: 8px 0 14px;
+    font-weight: 600;
+  }
+  th,
+  td {
+    padding: 12px 8px;
+    text-align: right;
+    border-bottom: 1px solid #e0e5e7;
+    white-space: nowrap;
+  }
+  th:first-child {
+    text-align: left;
+  }
+  th {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .prob-exercise {
+    margin-top: 26px;
+    padding: 22px;
+    background: #f5f7f8;
+    border-radius: 8px;
+  }
+  .prob-exercise label {
+    display: block;
+    margin: 12px 0;
+  }
+  .prob-exercise select {
+    max-width: 100%;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .prob-feedback {
+    margin-bottom: 0;
+    min-height: 1.5em;
+  }
+  .formula {
+    overflow-x: auto;
+    line-height: 1.9;
+    padding: 15px 18px;
+    background: #f2f5f6;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  details {
+    margin-top: 20px;
+  }
+  summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding-block: 10px;
+  }
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid #16786f;
+    outline-offset: 3px;
+  }
+  @media (max-width: 700px) {
+    .prob-columns {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .prob-exercise {
+      padding: 16px;
+    }
+    .prob-lab svg text {
+      font-size: 17px;
+    }
+    .prob-controls {
+      gap: 10px;
+    }
+    .prob-controls label {
+      max-width: none;
+    }
+    .prob-exercise select {
+      width: 100%;
+    }
+    .formula {
+      font-size: 0.9rem;
+    }
+  }
+</style>
