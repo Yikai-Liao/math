@@ -1460,3 +1460,242 @@ html {
 .course-main {
   min-height: calc(100vh - 68px);
 }
+
+/* 学科分类、学习顺序与当前课分开表达，不将未制作内容伪装成可进入课程。 */
+.subject-nav {
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+.subject-nav > summary {
+  font-size: 14px;
+  color: var(--ink);
+  padding: 10px 9px;
+  min-height: 44px;
+}
+.subject-nav-inner {
+  margin: 1px 0 0 12px;
+  padding-left: 10px;
+  border-left: 1px solid #cdd6e3;
+}
+.nav-domain-note {
+  font-size: 10px;
+  color: var(--muted);
+  display: block;
+  padding: 4px 4px 8px;
+}
+.topic-nav {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.topic-nav > summary {
+  font-size: 13px;
+  color: var(--ink);
+  padding: 8px 4px;
+}
+.topic-nav > summary small {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.topic-lessons {
+  padding-top: 4px;
+}
+.course-sidebar .topic-lessons a,
+.course-drawer .topic-lessons a {
+  padding: 10px 6px;
+  gap: 9px;
+}
+.planned-nav {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 16px;
+}
+.planned-nav .nav-future {
+  margin: 0 10px;
+  border: 0;
+  padding: 0;
+}
+.planned-nav p {
+  font-size: 12px;
+  margin: 10px 0;
+}
+.planned-nav p small {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+}
+.course-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  padding-top: 24px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.course-breadcrumbs a {
+  text-underline-offset: 3px;
+}
+.course-breadcrumbs strong {
+  font-weight: 550;
+  color: var(--ink);
+}
+.course-main .opening {
+  padding-top: 18px;
+}
+.course-main > .lesson {
+  padding-top: 22px;
+}
+.subject-roadmap {
+  list-style: none;
+  margin: 28px 0 20px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  background: white;
+}
+.subject-roadmap li {
+  padding: 21px 23px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.subject-roadmap li:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+.subject-roadmap li:nth-child(n + 3) {
+  border-bottom: 0;
+}
+.subject-roadmap h2 {
+  font-size: 18px;
+  margin: 7px 0 9px;
+}
+.subject-roadmap p {
+  font-size: 13px;
+  margin: 0;
+  color: #526078;
+}
+.subject-roadmap .route-status {
+  font-size: 11px;
+  color: var(--muted);
+}
+.subject-roadmap .current-topic {
+  background: #eaf0f9;
+  box-shadow: inset 3px 0 0 #446ea6;
+}
+.subject-roadmap a {
+  font-size: 12px;
+  color: #234f89;
+  display: inline-block;
+  margin-top: 13px;
+  text-underline-offset: 4px;
+}
+.route-caveat {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 17px 0 30px;
+}
+.topic-position {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 20px 0 28px;
+}
+.topic-position h2 {
+  font-size: 20px;
+  margin-bottom: 13px;
+}
+.classification {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 13px;
+  margin: 10px 0 20px;
+}
+.classification > span {
+  color: #7e8da3;
+}
+.topic-distinction {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+.topic-distinction p {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.topic-title {
+  font-size: 25px;
+  margin: 25px 0 0;
+}
+.prerequisite-box {
+  padding: 18px 20px;
+  background: #edf1f7;
+  margin: 25px 0 18px;
+}
+.prerequisite-box h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+.prerequisite-box ul {
+  padding-left: 20px;
+  margin: 0;
+  font-size: 13px;
+}
+.prerequisite-box p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+.overview-purpose h3 {
+  font-size: 17px;
+}
+@media (max-width: 550px) {
+  .subject-roadmap {
+    grid-template-columns: 1fr;
+    margin-top: 22px;
+  }
+  .subject-roadmap li {
+    padding: 18px 20px;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+  .subject-roadmap li:last-child {
+    border-bottom: 0 !important;
+  }
+  .subject-roadmap h2 {
+    font-size: 17px;
+  }
+  .topic-distinction {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .classification {
+    font-size: 12px;
+    gap: 4px 8px;
+  }
+  .course-breadcrumbs {
+    font-size: 10px;
+    gap: 4px 7px;
+    padding-top: 19px;
+  }
+  .topic-title {
+    font-size: 23px;
+  }
+  .topic-position {
+    padding: 20px 0;
+  }
+  .course-main .opening {
+    padding-top: 14px;
+  }
+  .course-drawer .subject-nav > summary {
+    font-size: 15px;
+  }
+  .course-drawer .topic-nav > summary {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+}

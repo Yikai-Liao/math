@@ -534,6 +534,16 @@ function showCourseView() {
   const active = courseSectionIds.includes(requested) ? requested : "overview";
   stopAppend();
   stopResize();
+  const lessonNames = {
+    aggregate: "聚合分析",
+    banker: "记账法",
+    potential: "势能法",
+    hysteresis: "扩缩容策略",
+  };
+  document.querySelector("#course-breadcrumbs").innerHTML =
+    active === "overview"
+      ? "<span>数学学习路线</span>"
+      : `<a href="#overview">学习路线</a><span aria-hidden="true">›</span><span>算法分析</span><span aria-hidden="true">›</span><span>时间复杂度</span><span aria-hidden="true">›</span><span>摊还分析</span><span aria-hidden="true">›</span><strong>${lessonNames[active]}</strong>`;
   courseSectionIds.forEach((id) => {
     document.getElementById(id).hidden = id !== active;
   });
@@ -541,8 +551,14 @@ function showCourseView() {
   document.querySelectorAll("[data-course-link]").forEach((link) => {
     const current = link.dataset.courseLink === active;
     link.classList.toggle("current", current);
-    if (current) link.setAttribute("aria-current", "page");
-    else link.removeAttribute("aria-current");
+    if (current) {
+      link.setAttribute("aria-current", "page");
+      let parent = link.parentElement;
+      while (parent) {
+        if (parent.tagName === "DETAILS") parent.open = true;
+        parent = parent.parentElement;
+      }
+    } else link.removeAttribute("aria-current");
   });
   if (courseMenu.open) courseMenu.close();
   const currentView = document.getElementById(active);
@@ -560,3 +576,20 @@ window.addEventListener("resize", () => {
   if (window.innerWidth > 900 && courseMenu.open) courseMenu.close();
 });
 showCourseView();
+
+const pairedDirectoryGroups = [
+  ".subject-nav:not(.planned-nav)",
+  ".topic-nav",
+  ".planned-nav",
+];
+pairedDirectoryGroups.forEach((selector) => {
+  const groups = [...document.querySelectorAll(selector)];
+  groups.forEach((group) =>
+    group.addEventListener("toggle", () => {
+      groups.forEach((other) => {
+        if (other !== group && other.open !== group.open)
+          other.open = group.open;
+      });
+    }),
+  );
+});
