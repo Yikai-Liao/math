@@ -1,0 +1,472 @@
+<section
+  class="chapter lesson math-lesson calc-lesson"
+  data-course-view="calculus-local"
+  id="calculus-local"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="calc-kicker">微积分 · 01 / 局部变化</p>
+    <h2>导数：用一条直线近似附近的曲线</h2>
+    <p>
+      导数 f′(a) 是差商 [f(a+h)−f(a)]/h 在 h→0 时的极限。它给出函数在 a
+      附近的一阶变化率。
+    </p>
+  </header>
+  <p class="calc-route">
+    用途：估计小变化及其误差。先修：函数、极限；下一步：
+    <a href="#calculus-gradient">多元函数的方向变化率</a>。
+  </p>
+  <div class="lab calc-lab">
+    <div>
+      <h3>把步长减半，误差会怎样？</h3>
+      <p>固定 f(x)=x²。实线是曲线，虚线是在 a 处的切线，竖线标出近似误差。</p>
+      <svg
+        id="calc-local-plot"
+        viewBox="0 0 620 330"
+        role="img"
+        aria-label="平方函数、切线与误差，数值见下方"
+      ></svg>
+      <p id="calc-local-reading" class="calc-reading" aria-live="polite"></p>
+    </div>
+    <div class="controls calc-controls">
+      <label for="calc-a">
+        展开点 a <output id="calc-a-out">1.00</output>
+      </label>
+      <input
+        id="calc-a"
+        type="range"
+        min="-1.5"
+        max="1.5"
+        step="0.1"
+        value="1"
+      />
+      <label for="calc-h">
+        步长 h <output id="calc-h-out">0.80</output>
+      </label>
+      <input id="calc-h" type="range" min="-1" max="1" step="any" value="0.8" />
+      <button type="button" id="calc-half">
+        将 h 减半
+      </button>
+      <button type="button" id="calc-local-reset">
+        重置实验
+      </button>
+      <p class="formula">
+        L(a+h)=a²+2ah
+        <br />
+        误差 E=f(a+h)−L(a+h)=h²
+      </p>
+      <p id="calc-local-ratio"></p>
+    </div>
+  </div>
+  <details class="calc-details">
+    <summary>从差商推导局部线性近似</summary>
+    <p>当 h≠0，[(a+h)²−a²]/h=2a+h。令 h→0，得到 f′(a)=2a。</p>
+    <p>
+      展开平方：(a+h)²=a²+2ah+h²。因此线性部分 L(a+h)=f(a)+f′(a)h；余下的误差为
+      h²，且 |E|/|h|=|h|→0。
+    </p>
+    <p>
+      一般地，f 在 a 处可导等价于 f(a+h)=f(a)+f′(a)h+r(h)，其中
+      r(h)/h→0。平方函数的误差恰好是二阶；可导函数未必都有二阶误差。
+    </p>
+  </details>
+  <form class="calc-exercise" id="calc-local-exercise">
+    <h3>试着算一次</h3>
+    <p>用 a=2 处的切线估计 f(2.1)，其中 f(x)=x²。线性近似值是多少？</p>
+    <label for="calc-local-answer">近似值</label>
+    <input
+      id="calc-local-answer"
+      type="number"
+      step="any"
+      inputmode="decimal"
+      required
+    />
+    <button type="submit">检查答案</button>
+    <p id="calc-local-feedback" role="status"></p>
+    <details>
+      <summary>提示</summary>
+      <p>先求 f(2) 与 f′(2)，再代入 f(2)+f′(2)×0.1。</p>
+    </details>
+  </form>
+  <p class="calc-route">
+    下一课：<a href="#calculus-gradient">梯度与方向导数 →</a>
+  </p>
+</section>
+
+<section
+  class="chapter lesson math-lesson calc-lesson"
+  data-course-view="calculus-gradient"
+  id="calculus-gradient"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="calc-kicker">微积分 · 02 / 多元变化</p>
+    <h2>梯度：把方向变成变化率</h2>
+    <p>
+      偏导数 ∂f/∂x 是保持 y 不变、沿 x 方向求得的导数；∂f/∂y 同理。梯度
+      ∇f=(∂f/∂x, ∂f/∂y) 把两个偏导数组成向量。
+    </p>
+    <p>
+      点积定义为 (u₁,u₂)·(v₁,v₂)=u₁v₁+u₂v₂。多元函数在点 p
+      可微，表示它在附近有局部线性近似：f(p+v)=f(p)+∇f(p)·v+r(v)，且
+      r(v)/‖v‖→0（v→0）。这里 v 是位移向量，‖v‖ 是它的长度。于是沿单位向量 u
+      的方向导数为 Dᵤf=∇f·u。
+    </p>
+  </header>
+  <p class="calc-route">
+    用途：判断向哪个方向函数增加最快。先修：
+    <a href="#calculus-local">导数与线性近似</a>、向量点积。此处 f(x,y)=x²+2y²。
+  </p>
+  <div class="lab calc-lab">
+    <div>
+      <h3>转动方向，比较上升与下降</h3>
+      <p>
+        椭圆是等高线 x²+2y²=c；标注的 c 是函数值。实箭头是单位方向
+        u，虚箭头是梯度方向（单位化显示）。
+      </p>
+      <svg
+        id="calc-gradient-plot"
+        viewBox="0 0 620 390"
+        role="img"
+        aria-label="二次函数的等高线、所在点及方向箭头，数值见下方"
+      ></svg>
+      <p id="calc-gradient-reading" class="calc-reading" aria-live="polite"></p>
+    </div>
+    <div class="controls calc-controls">
+      <label for="calc-gx">
+        点的 x 坐标 <output id="calc-gx-out">1.0</output>
+      </label>
+      <input
+        id="calc-gx"
+        type="range"
+        min="-1.5"
+        max="1.5"
+        step="0.1"
+        value="1"
+      />
+      <label for="calc-gy">
+        点的 y 坐标 <output id="calc-gy-out">0.5</output>
+      </label>
+      <input
+        id="calc-gy"
+        type="range"
+        min="-1.5"
+        max="1.5"
+        step="0.1"
+        value="0.5"
+      />
+      <label for="calc-angle">
+        方向角 θ（度）<output id="calc-angle-out">0</output>
+      </label>
+      <input
+        id="calc-angle"
+        type="range"
+        min="0"
+        max="360"
+        step="1"
+        value="0"
+      />
+      <button type="button" id="calc-steepest">
+        指向最快上升
+      </button>
+      <button type="button" id="calc-gradient-reset">
+        重置实验
+      </button>
+      <p class="formula">
+        ∇f=(2x,4y)
+        <br />
+        u=(cos θ,sin θ)
+        <br />
+        Dᵤf=2x cos θ+4y sin θ
+      </p>
+      <p id="calc-gradient-max"></p>
+    </div>
+  </div>
+  <details class="calc-details">
+    <summary>为什么点积给出方向导数？</summary>
+    <p>
+      沿直线走：令 g(t)=f(x+t u₁,y+t u₂)。链式法则给出 g′(0)=fₓu₁+fᵧu₂=∇f·u。
+    </p>
+    <p>
+      本例可直接展开：f(p+tu)−f(p)=t(2xu₁+4yu₂)+t²(u₁²+2u₂²)。除以 t
+      并取极限，二次项消失。
+    </p>
+    <p>
+      当 ‖u‖=1，柯西–施瓦茨不等式给出 ∇f·u≤‖∇f‖。若梯度非零，u=∇f/‖∇f‖
+      时取等号；与梯度垂直时一阶变化率为零。在原点，梯度为零，每个方向的一阶变化率都是零，但离开原点函数仍会按二阶增长。
+    </p>
+  </details>
+  <form class="calc-exercise" id="calc-gradient-exercise">
+    <h3>检查方向是否单位化</h3>
+    <p>在 (1,1) 处，沿单位方向 u=(3/5,4/5)，f(x,y)=x²+2y² 的方向导数是多少？</p>
+    <label for="calc-gradient-answer">方向导数</label>
+    <input
+      id="calc-gradient-answer"
+      type="number"
+      step="any"
+      inputmode="decimal"
+      required
+    />
+    <button type="submit">检查答案</button>
+    <p id="calc-gradient-feedback" role="status"></p>
+    <details>
+      <summary>提示</summary>
+      <p>∇f(1,1)=(2,4)。分别相乘后相加；方向向量的长度已经是 1。</p>
+    </details>
+  </form>
+  <p class="calc-route">
+    下一课：<a href="#calculus-integral">定积分与累积 →</a>
+  </p>
+</section>
+
+<section
+  class="chapter lesson math-lesson calc-lesson"
+  data-course-view="calculus-integral"
+  id="calculus-integral"
+  hidden
+>
+  <header class="lesson-heading lesson-head">
+    <p class="calc-kicker">微积分 · 03 / 累积变化</p>
+    <h2>定积分：小块累积的极限</h2>
+    <p>
+      把区间分成小段，用每段的函数值乘以段宽，再相加。对连续函数，当最大段宽趋于零，这些和收敛到定积分。
+    </p>
+  </header>
+  <p class="calc-route">
+    用途：从局部变化率计算总变化。先修：求和、极限、
+    <a href="#calculus-local">导数</a>。这里计算非负函数 x² 在 [0,b]
+    下的面积；一般定积分是带符号的累积，横轴下方的部分计为负。
+  </p>
+  <div class="lab calc-lab">
+    <div>
+      <h3>矩形如何逼近曲线下的面积？</h3>
+      <p>
+        等分成 n 段，宽度 Δx=b/n。切换取样位置，再把 n 加倍，观察有符号误差
+        S−I。
+      </p>
+      <svg
+        id="calc-integral-plot"
+        viewBox="0 0 620 330"
+        role="img"
+        aria-label="平方函数与黎曼和矩形，面积及误差见下方"
+      ></svg>
+      <p id="calc-integral-reading" class="calc-reading" aria-live="polite"></p>
+    </div>
+    <div class="controls calc-controls">
+      <label for="calc-b">
+        右端点 b <output id="calc-b-out">2.0</output>
+      </label>
+      <input id="calc-b" type="range" min="0.5" max="3" step="0.1" value="2" />
+      <label for="calc-n">
+        分段数 n <output id="calc-n-out">6</output>
+      </label>
+      <input id="calc-n" type="range" min="1" max="80" step="1" value="6" />
+      <label for="calc-method">每段取样位置</label>
+      <select id="calc-method">
+        <option value="left">左端点</option>
+        <option value="right">右端点</option>
+        <option value="mid" selected>
+          中点
+        </option>
+      </select>
+      <button type="button" id="calc-double">
+        将 n 加倍
+      </button>
+      <button type="button" id="calc-integral-reset">
+        重置实验
+      </button>
+      <p class="formula">
+        S=Σ f(ξᵢ)Δx
+        <br />
+        I=∫₀ᵇ x² dx=b³/3
+      </p>
+      <p id="calc-integral-error"></p>
+    </div>
+  </div>
+  <details class="calc-details">
+    <summary>求和极限与微积分基本定理</summary>
+    <p>
+      右端点 ξᵢ=ib/n，故 Sᵣ=(b³/n³)Σᵢ₌₁ⁿ i²=b³(1/3+1/(2n)+1/(6n²))，用到了
+      Σi²=n(n+1)(2n+1)/6。令 n→∞，得到 I=b³/3。
+    </p>
+    <p>
+      左端点和为 Sₗ=b³(1/3−1/(2n)+1/(6n²))；中点和为
+      Sₘ=b³(1/3−1/(12n²))。所以此例左端点低估、右端点高估，中点也低估且误差按
+      1/n² 衰减。
+    </p>
+    <p>
+      微积分基本定理：若 f 连续，则累积函数 A(b)=∫₀ᵇ f(x)dx 满足
+      A′(b)=f(b)。本例 A(b)=b³/3，A′(b)=b²。把右边界向右移动很短距离
+      δ，新增面积约为 b²δ。
+    </p>
+  </details>
+  <form class="calc-exercise" id="calc-integral-exercise">
+    <h3>从累积量回到变化率</h3>
+    <p>A(b)=∫₀ᵇ x² dx。当 b=2 时，A′(2) 等于多少？</p>
+    <label for="calc-integral-answer">变化率</label>
+    <input
+      id="calc-integral-answer"
+      type="number"
+      step="any"
+      inputmode="decimal"
+      required
+    />
+    <button type="submit">检查答案</button>
+    <p id="calc-integral-feedback" role="status"></p>
+    <details>
+      <summary>提示</summary>
+      <p>基本定理给出 A′(b)=f(b)。在移动的右边界处读取曲线的高度。</p>
+    </details>
+  </form>
+  <p class="calc-route">
+    继续学习：<a href="#probability-distribution">概率分布 →</a>
+  </p>
+</section>
+<script>
+  import "../scripts/calculus.js";
+</script>
+<style>
+  .calc-lesson .calc-kicker {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .calc-lesson h2 {
+    font-size: 27px;
+    margin-bottom: 14px;
+  }
+  .calc-route {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .calc-route a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .calc-lab {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 24px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 8px;
+  }
+  .calc-lab > div {
+    min-width: 0;
+  }
+  .calc-lab svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fcfcfd;
+  }
+  .calc-lab p {
+    font-size: 14px;
+  }
+  .calc-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .calc-controls label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    gap: 8px;
+  }
+  .calc-controls input[type="range"] {
+    width: 100%;
+    min-height: 32px;
+    accent-color: var(--blue);
+  }
+  .calc-controls select {
+    font: inherit;
+    min-height: 44px;
+    border: 1px solid #bdc8d8;
+    background: white;
+    border-radius: 4px;
+    padding: 6px;
+  }
+  .calc-controls .formula {
+    font-size: 15px;
+    padding: 12px;
+    margin: 4px 0;
+    overflow-wrap: anywhere;
+  }
+  .calc-reading {
+    font-variant-numeric: tabular-nums;
+    min-height: 3.6em;
+    margin: 12px 0 0;
+  }
+  .calc-details {
+    margin: 24px 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 16px;
+  }
+  .calc-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 8px 0;
+  }
+  .calc-details p {
+    margin-top: 12px;
+  }
+  .calc-exercise {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .calc-exercise label {
+    margin-right: 8px;
+  }
+  .calc-exercise input {
+    max-width: 150px;
+    min-height: 44px;
+    border: 1px solid #bdc8d8;
+    border-radius: 4px;
+    padding: 8px;
+    font: inherit;
+    margin: 0 8px 8px 0;
+  }
+  .calc-exercise [role="status"] {
+    margin: 12px 0;
+    min-height: 1.8em;
+  }
+  .calc-exercise summary {
+    cursor: pointer;
+  }
+  .calc-exercise details p {
+    margin: 10px 0 0;
+  }
+  .calc-controls select:focus-visible {
+    outline: 3px solid #6a92cb;
+    outline-offset: 3px;
+  }
+  @media (max-width: 800px) {
+    .calc-lab {
+      grid-template-columns: 1fr;
+      padding: 16px;
+      gap: 16px;
+    }
+    .calc-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+    .calc-controls label,
+    .calc-controls input,
+    .calc-controls select,
+    .calc-controls p {
+      grid-column: 1/-1;
+    }
+    .calc-lesson h2 {
+      font-size: 23px;
+    }
+    .calc-controls input[type="range"] {
+      min-height: 44px;
+    }
+  }
+</style>
