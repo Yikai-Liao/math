@@ -6,7 +6,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
   <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" /><title>课程响应式检查</title></head>
   <body>
     <header><h1>课程响应式检查</h1><label>视口宽度 <select id="width"><option value="390">手机 390 px</option><option value="768">平板 768 px</option><option value="1440">桌面 1440 px</option></select></label><a href={base}>打开课程</a></header>
-    <main><iframe id="course" title="数学第一周课程" src={base} width="390" height="844"></iframe></main>
+    <main><iframe id="course" title="数学语言课程" src={base} width="390" height="844"></iframe></main>
     <style>body{margin:0;background:#e9edf2;color:#172334;font:16px system-ui,sans-serif}header{display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:16px 24px;background:white}h1{font-size:20px;margin:0}select{font:inherit;padding:10px}main{padding:24px;overflow:auto}iframe{display:block;border:0;background:white}a{color:#174ca4}</style>
     <script>const select=document.querySelector<HTMLSelectElement>('#width')!;const frame=document.querySelector<HTMLIFrameElement>('#course')!;select.addEventListener('change',()=>{frame.width=select.value;frame.height=select.value==='390'?'844':'1000';});</script>
   </body>

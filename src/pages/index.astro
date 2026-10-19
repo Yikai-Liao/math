@@ -7,12 +7,12 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#f5f1e8" />
+    <meta name="theme-color" content="#f1f4f8" />
     <meta
       name="description"
       content="一堂可以动手玩的数学语言课：用图形、动画和小实验，重新理解命题、量词、蕴含与证明。"
     />
-    <title>数学，先从一句话开始 · 第一周</title>
+    <title>第一单元：数学的语言 · 一点一点</title>
     <link rel="stylesheet" href={`${base}style.css`} />
     <script src={`${base}app.js`} is:inline defer></script>
   </head>
@@ -25,169 +25,92 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         一点一点<span>数学重启计划</span>
       </a>
       <a class="week-link" href="#roadmap">
-        第一周 / 数学的语言 <span>↗</span>
+        第一单元：数学的语言{" "}
+        <svg class="inline-arrow" viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            d="M4 16 16 4M5 4h11v11"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+        </svg>
       </a>
     </header>
     <main id="main">
       <section class="hero wrap">
         <div class="hero-copy">
-          <p class="eyebrow">WEEK 01　·　先理解，再记符号</p>
           <h1>
-            数学，
+            先让一句话，
             <br />
-            先从<span class="coral">一句话</span>
-            <br />
-            开始。
+            <span class="coral">变得清楚。</span>
           </h1>
           <p class="hero-intro">
-            不急着算。先学会问：这句话在说什么？
+            第一单元：数学的语言。
             <br />
-            什么时候它是真的？怎样才能确定？
-          </p>
-          <p class="subtle">
-            给学过、忘了、想重新理解的你。
-            <br />
-            像讲故事一样简单，像数学一样认真。
+            动手改一个条件，看结论怎样改变。
           </p>
           <a class="primary" href="#chapter1">
-            开始第一课 <span>↗</span>
+            开始第一课{" "}
+            <svg class="inline-arrow" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                d="M4 16 16 4M5 4h11v11"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
           </a>
           <div class="hero-meta">
-            <span>4 个小章节</span>
+            <span>4 节课</span>
             <span>约 45–60 分钟</span>
-            <span>可随时停下来</span>
+            <span>进度保存在本机</span>
           </div>
         </div>
-        <div
-          class="hero-art"
-          aria-label="图解：全部方块都被包含在圆形集合里，展示范围与判断"
-        >
-          <div class="art-top">
-            <span>THE LANGUAGE OF MATH</span>
-            <span>01 / 04</span>
+        <div class="hero-experiment">
+          <div class="experiment-heading">
+            <span>先试一个小实验</span>
+            <button id="hero-reset" class="text-button">
+              重置
+            </button>
           </div>
-          <svg
-            viewBox="0 0 480 440"
-            role="img"
-            aria-label="集合中的形状与数学符号"
-          >
-            <defs>
-              <pattern
-                id="dots"
-                width="22"
-                height="22"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle cx="2" cy="2" r="1" fill="#b9c6c0" />
-              </pattern>
-            </defs>
-            <rect width="480" height="440" fill="url(#dots)" />
-            <ellipse
-              cx="242"
-              cy="236"
-              rx="168"
-              ry="150"
-              fill="#e4eade"
-              stroke="#225f51"
-              stroke-width="2"
-            />
-            <path
-              d="M108 345 Q34 244 111 144"
-              fill="none"
-              stroke="#225f51"
-              stroke-width="2"
-            />
-            <path
-              d="M101 145 l12 -7 -1 15"
-              fill="none"
-              stroke="#225f51"
-              stroke-width="2"
-            />
-            <g class="floating">
-              <rect
-                x="145"
-                y="166"
-                width="64"
-                height="64"
-                rx="6"
-                fill="#ed7457"
-                transform="rotate(-12 177 198)"
-              />
-              <rect
-                x="261"
-                y="233"
-                width="68"
-                height="68"
-                rx="6"
-                fill="#ed7457"
-                transform="rotate(15 295 267)"
-              />
-              <rect
-                x="164"
-                y="280"
-                width="43"
-                height="43"
-                rx="5"
-                fill="#ed7457"
-                transform="rotate(8 185 301)"
-              />
-            </g>
-            <text
-              x="274"
-              y="160"
-              font-size="50"
-              fill="#225f51"
-              font-family="Georgia"
-            >
-              ∀
-            </text>
-            <text
-              x="335"
-              y="338"
-              font-size="45"
-              fill="#225f51"
-              font-family="Georgia"
-            >
-              ?
-            </text>
-            <circle cx="391" cy="96" r="25" fill="#eec66d" />
-            <path
-              d="M211 60 l22 0 m-11 -11 l0 22"
-              stroke="#225f51"
-              stroke-width="2"
-            />
-            <text x="124" y="386" font-size="15" fill="#225f51">
-              先圈定范围，再讨论对错。
-            </text>
-          </svg>
-          <div class="art-note">
-            <span class="dot"></span> 一点直觉 + 一点严谨 = 真正理解
+          <p class="experiment-question">
+            “这里的灯，<strong>全部亮着。</strong>”
+          </p>
+          <div
+            id="hero-lights"
+            class="hero-lights"
+            aria-label="五盏灯，点击切换亮灭"
+          ></div>
+          <div class="hero-verdict" aria-live="polite">
+            <strong id="hero-truth">真</strong>
+            <p id="hero-explanation">关掉任意一盏，看看这句话会怎样。</p>
           </div>
+          <p class="experiment-hint">点灯切换。范围只限眼前这五盏灯。</p>
         </div>
       </section>
       <section id="roadmap" class="roadmap wrap">
         <div class="section-label">
-          本周路线 <span>从一句话，走到一个证明。</span>
+          本单元路线 <span>从一句话，走到一个证明。</span>
         </div>
         <div class="route-grid">
           <a href="#chapter1">
             <b>01</b>
-            <span>能判断真假的话</span>
+            <span>第一课：命题</span>
             <small>命题 · 约 10 分钟</small>
           </a>
           <a href="#chapter2">
             <b>02</b>
-            <span>“所有”和“存在”</span>
+            <span>第二课：量词</span>
             <small>量词 · 约 15 分钟</small>
           </a>
           <a href="#chapter3">
             <b>03</b>
-            <span>如果……那么……</span>
+            <span>第三课：蕴含</span>
             <small>蕴含 · 约 15 分钟</small>
           </a>
           <a href="#chapter4">
             <b>04</b>
-            <span>找到反例，然后呢？</span>
+            <span>第四课：反例与证明</span>
             <small>证明 · 约 15 分钟</small>
           </a>
         </div>
@@ -196,10 +119,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         <div class="chapter-heading">
           <span class="chapter-num">01</span>
           <div>
-            <p class="eyebrow">先给一句话装上“真假开关”</p>
+            <p class="eyebrow">第一课：命题</p>
             <h2>什么话，才算命题？</h2>
           </div>
-          <span class="duration">10 MIN</span>
+          <span class="duration">约 10 分钟</span>
         </div>
         <div class="lesson-grid">
           <div class="explain">
@@ -267,10 +190,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         <div class="chapter-heading">
           <span class="chapter-num">02</span>
           <div>
-            <p class="eyebrow">先圈定一个世界</p>
+            <p class="eyebrow">第二课：量词</p>
             <h2>“所有”，与“至少一个”。</h2>
           </div>
-          <span class="duration">15 MIN</span>
+          <span class="duration">约 15 分钟</span>
         </div>
         <div class="lesson-grid">
           <div class="explain">
@@ -288,14 +211,14 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
                 <b>∀</b>
                 <span>
                   <strong>所有 / 任意一个</strong>
-                  <small>每一块积木都是青色。</small>
+                  <small>每一块积木都是蓝色。</small>
                 </span>
               </div>
               <div>
                 <b>∃</b>
                 <span>
                   <strong>存在 / 至少一个</strong>
-                  <small>至少一块积木是青色。</small>
+                  <small>至少一块积木是蓝色。</small>
                 </span>
               </div>
             </div>
@@ -305,9 +228,9 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
             <div class="note">
               <b>否定不是随便换个反义词。</b>
               <p>
-                “不是所有积木都青色”＝“至少一块不是青色”。
+                “不是所有积木都蓝色”＝“至少一块不是蓝色”。
                 <br />
-                它并不意味着“所有积木都不是青色”。
+                它并不意味着“所有积木都不是蓝色”。
               </p>
             </div>
           </div>
@@ -320,7 +243,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
             <div
               id="blocks"
               class="blocks"
-              aria-label="点击积木切换青色和橙色"
+              aria-label="点击积木切换蓝色和红色"
             ></div>
             <div
               id="quantifier-results"
@@ -329,10 +252,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
             ></div>
             <div class="lab-footer">
               <button id="blocks-all" class="text-button">
-                全部变青
+                全部变蓝
               </button>
               <button id="blocks-none" class="text-button">
-                全部变橙
+                全部变红
               </button>
               <button id="blocks-play" class="text-button">
                 ▶ 逐个检查
@@ -426,10 +349,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         <div class="chapter-heading">
           <span class="chapter-num">03</span>
           <div>
-            <p class="eyebrow">一条只在特定情况下违约的规则</p>
+            <p class="eyebrow">第三课：蕴含</p>
             <h2>如果 P，那么 Q。</h2>
           </div>
-          <span class="duration">15 MIN</span>
+          <span class="duration">约 15 分钟</span>
         </div>
         <div class="lesson-grid">
           <div class="explain">
@@ -454,9 +377,9 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
                   width="450"
                   height="195"
                   rx="12"
-                  fill="#f5f1e8"
+                  fill="#f1f4f8"
                 />
-                <text x="20" y="30" fill="#6c766e" font-size="13">
+                <text x="20" y="30" fill="#626e82" font-size="13">
                   整数世界
                 </text>
                 <ellipse
@@ -464,10 +387,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
                   cy="109"
                   rx="173"
                   ry="78"
-                  fill="#e0e9dc"
-                  stroke="#276653"
+                  fill="#e7edfb"
+                  stroke="#3159bb"
                 />
-                <text x="312" y="73" fill="#276653" font-size="16">
+                <text x="312" y="73" fill="#3159bb" font-size="16">
                   偶数 Q
                 </text>
                 <ellipse
@@ -475,19 +398,19 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
                   cy="116"
                   rx="94"
                   ry="49"
-                  fill="#bed4c0"
-                  stroke="#276653"
+                  fill="#c6d4f8"
+                  stroke="#3159bb"
                 />
-                <text x="145" y="111" fill="#1a4338" font-size="15">
+                <text x="145" y="111" fill="#253d72" font-size="15">
                   4 的倍数 P
                 </text>
-                <text x="145" y="137" fill="#1a4338" font-size="15">
+                <text x="145" y="137" fill="#253d72" font-size="15">
                   4　8　12 …
                 </text>
-                <text x="332" y="131" fill="#ad452d" font-size="21">
+                <text x="332" y="131" fill="#a13c6b" font-size="21">
                   6
                 </text>
-                <text x="30" y="163" fill="#606b65" font-size="17">
+                <text x="30" y="163" fill="#626e82" font-size="17">
                   3
                 </text>
               </svg>
@@ -570,10 +493,10 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         <div class="chapter-heading">
           <span class="chapter-num">04</span>
           <div>
-            <p class="eyebrow">从“看起来对”到“为什么一定对”</p>
+            <p class="eyebrow">第四课：反例与证明</p>
             <h2>一个反例，胜过一百次通过。</h2>
           </div>
-          <span class="duration">15 MIN</span>
+          <span class="duration">约 15 分钟</span>
         </div>
         <div class="lesson-grid">
           <div class="explain">
@@ -597,8 +520,8 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
             <details>
               <summary>有限世界可以检查完吗？</summary>
               <p>
-                可以。如果命题只说 n = 1 到
-                39，且准确、完整地检查了每个 n 对应的计算结果都为质数，穷举就能证明这个有限命题。不能把它扩张成所有正整数。
+                可以。如果命题只说 n = 1 到 39，且准确、完整地检查了每个 n
+                对应的计算结果都为质数，穷举就能证明这个有限命题。不能把它扩张成所有正整数。
               </p>
             </details>
           </div>
@@ -686,7 +609,6 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
         </button>
       </section>
       <section class="finish wrap">
-        <p class="eyebrow">把符号放下，再说一遍</p>
         <h2>
           你已经有了一副
           <br />
@@ -736,7 +658,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
           </details>
         </div>
         <div class="progress-summary">
-          <p id="progress-text">已标记理解 0 / 4 章</p>
+          <p id="progress-text">已标记理解 0 / 4 课</p>
           <div class="progress-track">
             <div id="progress-fill"></div>
           </div>
@@ -748,13 +670,13 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
           </button>
         </div>
         <a class="primary" href="#chapter1">
-          回看第一章 ↑
+          回看第一课 ↑
         </a>
       </section>
     </main>
     <footer class="wrap">
       <span>一点一点 · 数学重启计划</span>
-      <span>第一周 / 让每一句话都更清楚</span>
+      <span>第一单元 / 让每一句话都更清楚</span>
     </footer>
   </body>
 </html>

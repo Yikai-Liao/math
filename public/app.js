@@ -91,7 +91,7 @@ let blocks = [true, true, true, true, false, true],
   scanTimer = null,
   scanIndex = -1;
 function truthLine(label, value) {
-  return `<div><span>${label}</span><strong class="${value ? "" : "no"}">${value ? "✓ 真" : "× 假"}</strong></div>`;
+  return `<div><span>${label}</span><strong class="${value ? "" : "no"}">${value ? "真" : "假"}</strong></div>`;
 }
 function stopScan() {
   clearInterval(scanTimer);
@@ -107,10 +107,10 @@ function renderBlocks() {
     const b = document.createElement("button");
     b.className = `block ${v ? "" : "orange"}`;
     b.dataset.num = String(i + 1).padStart(2, "0");
-    b.textContent = v ? "青色" : "橙色";
+    b.textContent = v ? "蓝色" : "红色";
     b.setAttribute(
       "aria-label",
-      `第 ${i + 1} 块：${v ? "青色" : "橙色"}，点击切换`,
+      `第 ${i + 1} 块：${v ? "蓝色" : "红色"}，点击切换`,
     );
     b.setAttribute("aria-pressed", String(v));
     b.onclick = () => {
@@ -119,29 +119,29 @@ function renderBlocks() {
       renderBlocks();
       $("#blocks-scan").textContent = blocks.every(Boolean)
         ? "每一块都符合。有限的六块已经全部检查。"
-        : `第 ${blocks.findIndex((x) => !x) + 1} 块不是青色，它就是“全部青色”的反例。`;
+        : `第 ${blocks.findIndex((x) => !x) + 1} 块不是蓝色，它就是“全部蓝色”的反例。`;
     };
     root.append(b);
   });
   const all = blocks.every(Boolean),
     some = blocks.some(Boolean);
   $("#quantifier-results").innerHTML =
-    truthLine("∀：每一块都是青色", all) +
-    truthLine("∃：至少一块是青色", some) +
-    truthLine("¬∀：至少一块不是青色", !all) +
-    truthLine("¬∃：一块青色也没有", !some);
+    truthLine("∀：每一块都是蓝色", all) +
+    truthLine("∃：至少一块是蓝色", some) +
+    truthLine("¬∀：至少一块不是蓝色", !all) +
+    truthLine("¬∃：一块蓝色也没有", !some);
 }
 $("#blocks-all").onclick = () => {
   stopScan();
   blocks.fill(true);
   renderBlocks();
-  $("#blocks-scan").textContent = "全部青色：“所有”和“存在”都为真。";
+  $("#blocks-scan").textContent = "全部蓝色：“所有”和“存在”都为真。";
 };
 $("#blocks-none").onclick = () => {
   stopScan();
   blocks.fill(false);
   renderBlocks();
-  $("#blocks-scan").textContent = "没有青色：“存在青色”的否定为真。";
+  $("#blocks-scan").textContent = "没有蓝色：“存在蓝色”的否定为真。";
 };
 $("#blocks-play").onclick = () => {
   if (scanTimer) {
@@ -156,7 +156,7 @@ $("#blocks-play").onclick = () => {
     if (scanIndex >= 6) {
       stopScan();
       $("#blocks-scan").textContent =
-        "六块全部通过。在这个只有六块的世界，“全部青色”是真的。";
+        "六块全部通过。在这个只有六块的世界，“全部蓝色”是真的。";
       return;
     }
     $$(".block")[scanIndex].classList.add("checking");
@@ -165,7 +165,7 @@ $("#blocks-play").onclick = () => {
       scanTimer = null;
       $("#blocks-play").textContent = "▶ 再检查一遍";
       $("#blocks-scan").textContent =
-        `停！第 ${scanIndex + 1} 块是橙色。只需这一个反例，“全部青色”就为假。`;
+        `停！第 ${scanIndex + 1} 块是红色。只需这一个反例，“全部蓝色”就为假。`;
     } else
       $("#blocks-scan").textContent =
         `第 ${scanIndex + 1} 块通过。但还没检查的积木，仍然需要检查。`;
@@ -182,10 +182,15 @@ let books = [
 function renderBooks() {
   const root = $("#book-grid");
   root.replaceChildren();
-  ["", "📘 蓝书", "📙 橙书", "📗 绿书"].forEach((t) => {
+  ["", "蓝书", "红书", "灰书"].forEach((t, column) => {
     const e = document.createElement("span");
     e.className = "grid-label";
-    e.textContent = t;
+    if (column === 0) e.textContent = t;
+    else {
+      e.classList.add("book-label");
+      const coverColor = ["", "#3159bb", "#b64b52", "#68768e"][column];
+      e.innerHTML = `<svg class="book-cover" viewBox="0 0 32 40" aria-hidden="true"><path d="M5 2h24v34H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Z" fill="${coverColor}"/><path d="M6 3v29M7 35h22" stroke="#fff" stroke-opacity=".65"/><path d="M11 11h12M11 15h8" stroke="#fff" stroke-width="1.5"/></svg><span>${t}</span>`;
+    }
     root.append(e);
   });
   ["小林", "小陈", "小王"].forEach((name, r) => {
@@ -196,10 +201,12 @@ function renderBooks() {
     books[r].forEach((v, c) => {
       const b = document.createElement("button");
       b.className = `book-cell ${v ? "on" : ""}`;
-      b.textContent = v ? "♥" : "·";
+      b.innerHTML = v
+        ? `<svg class="matrix-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 3.5 11.5C-1 6 6 1 12 7c6-6 13-1 8.5 4.5Z" fill="currentColor"/></svg>`
+        : "·";
       b.setAttribute(
         "aria-label",
-        `${name}${v ? "喜欢" : "不喜欢"}${["蓝书", "橙书", "绿书"][c]}，点击切换`,
+        `${name}${v ? "喜欢" : "不喜欢"}${["蓝书", "红书", "灰书"][c]}，点击切换`,
       );
       b.setAttribute("aria-pressed", String(v));
       b.onclick = () => {
@@ -492,9 +499,10 @@ function renderProgress() {
     const yes = progress.includes(Number(b.dataset.complete));
     b.classList.toggle("done", yes);
     b.setAttribute("aria-pressed", String(yes));
+    // taste-skill-ignore：勾选符号表示已完成的学习状态，并非装饰。
     b.textContent = b.textContent.replace(/^[○✓]/, yes ? "✓" : "○");
   });
-  $("#progress-text").textContent = `已标记理解 ${progress.length} / 4 章`;
+  $("#progress-text").textContent = `已标记理解 ${progress.length} / 4 课`;
   $("#progress-fill").style.width = `${progress.length * 25}%`;
   try {
     localStorage.setItem("math-week-one-v1", JSON.stringify(progress));
@@ -522,3 +530,36 @@ document.addEventListener("visibilitychange", () => {
     stopScan();
   }
 });
+
+// 首屏实验独立于章节积木，重置其中一个不会改动另一个。
+const heroLights = [true, true, true, true, true];
+function renderHeroLights() {
+  const root = $("#hero-lights");
+  root.replaceChildren();
+  heroLights.forEach((lit, index) => {
+    const button = document.createElement("button");
+    button.className = `hero-light ${lit ? "" : "off"}`;
+    button.setAttribute("aria-pressed", String(lit));
+    button.setAttribute(
+      "aria-label",
+      `第 ${index + 1} 盏灯：${lit ? "亮" : "灭"}，点击切换`,
+    );
+    button.innerHTML = `<svg viewBox="0 0 40 48" aria-hidden="true"><path class="bulb-fill" d="M20 3a13 13 0 0 0-9 22c3 3 4 5 4 8h10c0-3 1-5 4-8A13 13 0 0 0 20 3Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 37h10M16 41h8M18 45h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${index + 1} · ${lit ? "亮" : "灭"}</span>`;
+    button.onclick = () => {
+      heroLights[index] = !heroLights[index];
+      renderHeroLights();
+    };
+    root.append(button);
+  });
+  const allLit = heroLights.every(Boolean);
+  $("#hero-truth").textContent = allLit ? "真" : "假";
+  $("#hero-truth").classList.toggle("false", !allLit);
+  $("#hero-explanation").textContent = allLit
+    ? "五盏都亮着。关掉任意一盏，再看看。"
+    : `第 ${heroLights.findIndex((lit) => !lit) + 1} 盏没亮。只要一个例外，就能推翻“全部亮着”。`;
+}
+$("#hero-reset").onclick = () => {
+  heroLights.fill(true);
+  renderHeroLights();
+};
+renderHeroLights();

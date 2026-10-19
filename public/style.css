@@ -1,13 +1,13 @@
 :root {
-  --paper: #f6f3eb;
-  --ink: #243e35;
-  --muted: #69766e;
-  --coral: #d75c40;
-  --green: #286453;
-  --line: #d5dbd1;
-  --pale: #e8ede3;
-  --white: #fffdf8;
-  --yellow: #edc773;
+  --paper: #f7f9fc;
+  --ink: #1c273b;
+  --muted: #5f6c82;
+  --coral: #b4434b;
+  --green: #3159bb;
+  --line: #d7dfe9;
+  --pale: #eaf0fb;
+  --white: #ffffff;
+  --yellow: #b0c1ee;
 }
 * {
   box-sizing: border-box;
@@ -171,7 +171,7 @@ svg {
   font-size: 15px;
 }
 .primary:hover {
-  background: #1d4f40;
+  background: #234493;
 }
 .hero-meta {
   display: flex;
@@ -190,7 +190,7 @@ svg {
   transform: rotate(2deg);
   position: relative;
   margin-top: 15px;
-  box-shadow: 12px 14px 0 #e8e6db;
+  box-shadow: none;
 }
 .art-top {
   display: flex;
@@ -306,7 +306,7 @@ svg {
   margin-bottom: 22px;
 }
 .highlight {
-  background: linear-gradient(transparent 62%, #e7cda5 62%);
+  background: transparent;
 }
 .term {
   border-bottom: 1px dashed var(--green);
@@ -317,7 +317,7 @@ svg {
 .mini-example {
   padding: 20px 24px;
   border-left: 2px solid var(--coral);
-  background: #f0eae0;
+  background: #eef1f7;
   margin-bottom: 24px;
 }
 .mini-example span,
@@ -337,7 +337,7 @@ svg {
   border-radius: 8px;
   padding: 27px;
   background: var(--white);
-  box-shadow: 0 5px 0 #e9e9df;
+  box-shadow: none;
 }
 .lab > p {
   font-size: 14px;
@@ -431,7 +431,7 @@ svg {
   padding: 5px 0;
   font-size: 13px;
   text-decoration: underline;
-  text-decoration-color: #9aafa0;
+  text-decoration-color: #a5b5d5;
   text-underline-offset: 5px;
 }
 .text-button:hover {
@@ -452,8 +452,8 @@ details p {
   margin: 12px 0 0;
 }
 .pause {
-  background: #eeede3;
-  border-left: 3px solid #ccaa65;
+  background: #eef2f8;
+  border-left: 3px solid #6a87c7;
   padding: 20px 25px;
   margin-top: 32px;
   font-size: 14px;
@@ -508,7 +508,7 @@ details p {
   color: var(--muted);
 }
 .note {
-  background: #eaf0e5;
+  background: #edf2fd;
   padding: 20px;
   font-size: 13px;
   margin: 23px 0;
@@ -533,7 +533,7 @@ details p {
     transform 0.2s;
   position: relative;
   font-size: 12px;
-  box-shadow: inset 0 -5px 0 #0001;
+  box-shadow: none;
 }
 .block.orange {
   background: var(--coral);
@@ -611,7 +611,7 @@ details p {
 }
 .quiz {
   margin-top: 35px;
-  background: #eee9df;
+  background: #eef2f8;
   padding: 28px;
   border-radius: 5px;
 }
@@ -690,7 +690,7 @@ details p {
 }
 .direction-strip > div:nth-child(2) {
   border-color: var(--coral);
-  background: #f0e8de;
+  background: #f5eef0;
 }
 .direction-strip span,
 .direction-strip strong,
@@ -743,8 +743,8 @@ input[type="range"] {
   display: block;
 }
 .machine-result.failed {
-  background: #f6e2d7;
-  color: #99422e;
+  background: #faecee;
+  color: #96323a;
 }
 .number-trail {
   display: grid;
@@ -755,7 +755,7 @@ input[type="range"] {
 .trail-dot {
   height: 10px;
   border-radius: 2px;
-  background: #e6e8df;
+  background: #e7ecf3;
 }
 .trail-dot.pass {
   background: var(--green);
@@ -788,7 +788,7 @@ input[type="range"] {
   display: flex;
   gap: 6px;
   padding: 13px 7px;
-  border: 1px dashed #80a38e;
+  border: 1px dashed #809acc;
   border-radius: 25px;
   transition: transform 0.3s;
 }
@@ -866,7 +866,7 @@ input[type="range"] {
 }
 .progress-track {
   height: 5px;
-  background: #dde2d8;
+  background: #e1e8f3;
 }
 #progress-fill {
   height: 100%;
@@ -1131,4 +1131,307 @@ footer {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* 首屏直接演示量词：灯的亮灭是命题的输入。 */
+.hero {
+  grid-template-columns: 1fr 1.08fr;
+  gap: 65px;
+  padding-top: 64px;
+  padding-bottom: 64px;
+  min-height: 480px;
+}
+.hero h1 {
+  font-size: clamp(39px, 4.3vw, 60px);
+  letter-spacing: -2px;
+  line-height: 1.3;
+  margin: 0 0 24px;
+}
+.hero h1 .coral {
+  color: var(--green);
+}
+.hero-intro {
+  font-size: 17px;
+}
+.hero-experiment {
+  border: 1px solid var(--line);
+  background: white;
+  padding: 27px 30px;
+  align-self: center;
+  border-radius: 6px;
+}
+.experiment-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+.experiment-question {
+  font-size: 23px;
+  margin: 20px 0 24px;
+  line-height: 1.5;
+}
+.experiment-question strong {
+  font-weight: 650;
+}
+.hero-lights {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.hero-light {
+  position: relative;
+  border: 1px solid #d2dcf0;
+  background: #eef3ff;
+  border-radius: 6px;
+  padding: 14px 3px 9px;
+  color: var(--green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.2s;
+  font-size: 11px;
+}
+.hero-light svg {
+  width: 36px;
+  height: 43px;
+}
+.hero-light.off {
+  background: #f2f4f7;
+  color: #788295;
+  border-color: #dbe0e8;
+}
+.hero-light.off .bulb-fill {
+  fill: #e0e5ed;
+}
+.hero-light .bulb-fill {
+  fill: #a9bef3;
+}
+.hero-verdict {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  min-height: 80px;
+}
+.hero-verdict > strong {
+  font-size: 31px;
+  font-weight: 500;
+  color: var(--green);
+  min-width: 37px;
+}
+.hero-verdict > strong.false {
+  color: var(--coral);
+}
+.hero-verdict p {
+  font-size: 13px;
+  margin: 0;
+}
+.experiment-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 15px 0 0;
+}
+.grid-label.book-label {
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+}
+.book-cover {
+  width: 29px;
+  height: 37px;
+  flex: none;
+}
+.lab {
+  box-shadow: none;
+  border-radius: 5px;
+}
+.chapter-num {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 45px;
+}
+.chapter-heading .eyebrow {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.lab-tag {
+  border: 0;
+  border-radius: 0;
+  border-left: 2px solid var(--green);
+  color: var(--muted);
+  letter-spacing: 0;
+  padding-left: 7px;
+}
+.route-grid b,
+.recap b {
+  color: var(--muted);
+}
+.finish > h2 .coral {
+  color: var(--green);
+}
+.eyebrow {
+  letter-spacing: 0.6px;
+}
+.complete {
+  border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .hero {
+    gap: 30px;
+  }
+  .hero-experiment {
+    padding: 23px;
+  }
+  .hero-meta {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 650px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 32px;
+    padding-bottom: 35px;
+    gap: 26px;
+    min-height: 0;
+  }
+  .hero h1 {
+    font-size: 39px;
+    letter-spacing: -1px;
+    margin: 0 0 16px;
+  }
+  .hero-intro {
+    font-size: 15px;
+    margin: 14px 0;
+  }
+  .hero .primary {
+    margin: 6px 0 15px;
+    padding: 10px 20px;
+  }
+  .hero-meta {
+    font-size: 10px;
+  }
+  .hero-experiment {
+    padding: 20px;
+  }
+  .experiment-question {
+    font-size: 20px;
+    margin: 15px 0 20px;
+  }
+  .hero-lights {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .hero-light {
+    padding: 11px 2px 8px;
+  }
+  .hero-light svg {
+    width: 30px;
+    height: 37px;
+  }
+  .hero-verdict {
+    min-height: 75px;
+    padding-top: 15px;
+  }
+  .experiment-hint {
+    font-size: 10px;
+  }
+  .chapter-num {
+    font-size: 35px;
+  }
+  .hero-experiment .text-button {
+    font-size: 11px;
+  }
+  .hero-verdict p {
+    font-size: 12px;
+  }
+}
+
+.inline-arrow {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  vertical-align: middle;
+  flex: none;
+}
+.week-link .inline-arrow {
+  margin-left: 14px;
+}
+
+/* 界面保持中性；蓝色与红色只承担实验状态和反例的含义。 */
+:root {
+  --paper: #f7f8fa;
+  --ink: #1d232e;
+  --muted: #626b79;
+  --pale: #eef1f6;
+  --green: #1d5fbf;
+  --coral: #b4434b;
+}
+.primary,
+.primary:hover {
+  background: #222832;
+}
+.hero h1 .coral,
+.finish > h2 .coral {
+  color: var(--ink);
+}
+.text-button {
+  color: var(--ink);
+}
+.lab-tag {
+  border-left-color: var(--line);
+}
+.highlight {
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: #9fb8df;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 3px;
+}
+.experiment-heading,
+.experiment-hint,
+.hero-meta,
+.eyebrow,
+.subtle {
+  font-size: 12px;
+}
+.text-button {
+  min-height: 36px;
+}
+.book-label .book-cover {
+  border-radius: 0;
+}
+@media (max-width: 650px) {
+  .hero-meta,
+  .experiment-hint,
+  .lab-tag,
+  .eyebrow {
+    font-size: 11px;
+  }
+  .text-button {
+    min-height: 44px;
+  }
+  .hero-experiment .text-button {
+    min-height: 28px;
+  }
+  .hero h1 {
+    font-size: 36px;
+  }
+  .hero-meta {
+    gap: 6px;
+  }
+  .hero-meta span + span:before {
+    padding-right: 6px;
+  }
+}
+
+.matrix-heart {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: auto;
 }
